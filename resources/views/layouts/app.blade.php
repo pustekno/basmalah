@@ -47,6 +47,24 @@
         </script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         
+        <!-- Dinero.js for currency formatting -->
+        <script src="https://cdn.jsdelivr.net/npm/dinero.js@1.9.1/build/umd/dinero.min.js"></script>
+        <script>
+            // Helper function to format currency using Dinero.js
+            window.formatCurrency = function(amountInCents) {
+                return Dinero({ amount: amountInCents, currency: 'IDR' })
+                    .toFormat('$0,0');
+            };
+            
+            // Helper function to parse currency input to cents
+            window.parseCurrency = function(value) {
+                // Remove non-numeric characters except decimal point
+                const cleaned = value.toString().replace(/[^\d.]/g, '');
+                const amount = parseFloat(cleaned) || 0;
+                return Math.round(amount * 100); // Convert to cents
+            };
+        </script>
+        
         <style>
             * { font-family: 'Plus Jakarta Sans', sans-serif; }
             
