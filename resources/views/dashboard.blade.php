@@ -185,6 +185,34 @@
                 </div>
             </div>
 
+            <!-- Goals & Targets Overview (LIGA) -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">Goals & Targets</h3>
+                    <a href="{{ route('goals.index') }}" class="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 font-medium">
+                        View All →
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-3">
+                        <p class="text-xs text-green-600 dark:text-green-400 font-medium">Active Goals</p>
+                        <p class="text-2xl font-extrabold text-green-700 dark:text-green-300">{{ $activeGoals }}</p>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3">
+                        <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Completed</p>
+                        <p class="text-2xl font-extrabold text-blue-700 dark:text-blue-300">{{ $completedGoals }}</p>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-3">
+                        <p class="text-xs text-purple-600 dark:text-purple-400 font-medium">Target Amount</p>
+                        <p class="text-sm font-bold text-purple-700 dark:text-purple-300">Rp {{ number_format($totalGoalAmount, 0, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-3">
+                        <p class="text-xs text-orange-600 dark:text-orange-400 font-medium">Collected</p>
+                        <p class="text-sm font-bold text-orange-700 dark:text-orange-300">Rp {{ number_format($totalCollectedAmount, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </x-app-layout>

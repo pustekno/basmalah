@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Goal;
 use App\Models\Deposit;
+use App\Models\Transaction;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -12,19 +14,33 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // Quick stats
+        // Quick stats for Goals & Deposits (LIGA)
         $totalGoals = Goal::count();
         $activeGoals = Goal::where('status', 'active')->count();
         $completedGoals = Goal::where('status', 'completed')->count();
         $totalDeposits = Deposit::count();
         $totalDepositAmount = Deposit::sum('amount');
 
+        // Transaction stats (BAGUS) - for overview
+        $totalIncome = Transaction::where('type', 'income')
+            ->where('upcoming_flag', false)
+            ->sum('amount');
+        $totalExpense = Transaction::where('type', 'expense')
+            ->where('upcoming_flag', false)
+            ->sum('amount');
+        $netIncome = $totalIncome - $totalExpense;
+        $totalAccounts = Account::count();
+
         return view('reports.index', compact(
             'totalGoals',
             'activeGoals',
             'completedGoals',
             'totalDeposits',
-            'totalDepositAmount'
+            'totalDepositAmount',
+            'totalIncome',
+            'totalExpense',
+            'netIncome',
+            'totalAccounts'
         ));
     }
 
