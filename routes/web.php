@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\GoalController;
+use App\Http\Controllers\DepositController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,15 +37,21 @@ Route::middleware(['auth', 'role:Super Admin|Admin'])->prefix('admin')->name('ad
 
 // Permission-based Routes Examples
 Route::middleware(['auth', 'permission:view reports'])->group(function () {
-    // Reports routes
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/goals', [ReportController::class, 'goals'])->name('reports.goals');
+    Route::get('/reports/deposits', [ReportController::class, 'deposits'])->name('reports.deposits');
+    Route::get('/reports/charts', [ReportController::class, 'charts'])->name('reports.charts');
+    Route::post('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
-Route::middleware(['auth', 'permission:manage accounts'])->group(function () {
-    // Account management routes
-});
-
-Route::middleware(['auth', 'permission:create transactions'])->group(function () {
-    // Transaction creation routes
+// Goals & Targets - accessible by authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::resource('goals', GoalController::class);
+    
+    // Deposits for goals
+    Route::get('/goals/{goal}/deposits/create', [DepositController::class, 'create'])->name('deposits.create');
+    Route::post('/goals/{goal}/deposits', [DepositController::class, 'store'])->name('deposits.store');
+    Route::delete('/deposits/{deposit}', [DepositController::class, 'destroy'])->name('deposits.destroy');
 });
 
 require __DIR__.'/auth.php';
