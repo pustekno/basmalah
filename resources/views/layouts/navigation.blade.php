@@ -37,23 +37,26 @@
                     </x-nav-link>
                     @endrole
 
-                    @can('view transactions')
-                    <x-nav-link href="#" :active="false" class="inline-flex items-center gap-2">
+                    <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')" class="inline-flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                        </svg>
+                        {{ __('Accounts') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')" class="inline-flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                         {{ __('Transactions') }}
                     </x-nav-link>
-                    @endcan
 
-                    @can('view reports')
-                    <x-nav-link href="#" :active="false" class="inline-flex items-center gap-2">
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')" class="inline-flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        {{ __('Reports') }}
+                        {{ __('Calendar') }}
                     </x-nav-link>
-                    @endcan
 
                     @can('manage users')
                     <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" class="inline-flex items-center gap-2">
@@ -155,11 +158,19 @@
             </x-responsive-nav-link>
             @endrole
 
+            <x-responsive-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
+                {{ __('Accounts') }}
+            </x-responsive-nav-link>
+
             @can('view transactions')
-            <x-responsive-nav-link href="#" :active="false">
+            <x-responsive-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')">
                 {{ __('Transactions') }}
             </x-responsive-nav-link>
             @endcan
+
+            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                {{ __('Calendar') }}
+            </x-responsive-nav-link>
 
             @can('view reports')
             <x-responsive-nav-link href="#" :active="false">
