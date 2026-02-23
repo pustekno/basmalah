@@ -18,11 +18,10 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            
-            <!-- Quick Action Buttons -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="space-y-6">
+        
+        <!-- Quick Action Buttons -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <a href="{{ route('transactions.create') }}" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>

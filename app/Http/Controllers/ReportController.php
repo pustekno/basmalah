@@ -31,6 +31,65 @@ class ReportController extends Controller
         $netIncome = $totalIncome - $totalExpense;
         $totalAccounts = Account::count();
 
+        // Goals Report Data
+        $goals = Goal::with('creator')->withCount('deposits')->orderBy('created_at', 'desc')->take(10)->get();
+        $totalTargetAmount = Goal::where('status', 'active')->sum('target_amount');
+        $totalCurrentAmount = Goal::where('status', 'active')->sum('current_amount');
+
+        // Deposits Report Data
+        $recentDeposits = Deposit::with(['goal', 'recorder'])
+            ->orderBy('deposit_date', 'desc')
+            ->take(10)
+            ->get();
+
+        // Deposits by goal
+        $depositsByGoal = Deposit::select('goal_id', DB::raw('SUM(amount) as total'), DB::raw('COUNT(*) as count'))
+            ->groupBy('goal_id')
+            ->with('goal')
+            ->orderBy('total', 'desc')
+            ->take(5)
+            ->get();
+
+        // Monthly trend (last 6 months)
+        $monthlyTrend = Deposit::select(
+                DB::raw('DATE_FORMAT(deposit_date, "%Y-%m") as month'),
+                DB::raw('SUM(amount) as total'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('deposit_date', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // Charts Data
+        $goalsData = Goal::select('status', DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->get();
+
+        $categoryData = Goal::select('category', DB::raw('SUM(current_amount) as total'))
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        $monthlyGoals = Goal::select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $monthlyDeposits = Deposit::select(
+                DB::raw('DATE_FORMAT(deposit_date, "%Y-%m") as month'),
+                DB::raw('SUM(amount) as total')
+            )
+            ->where('deposit_date', '>=', now()->subMonths(12))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
         return view('reports.index', compact(
             'totalGoals',
             'activeGoals',
@@ -40,7 +99,17 @@ class ReportController extends Controller
             'totalIncome',
             'totalExpense',
             'netIncome',
-            'totalAccounts'
+            'totalAccounts',
+            'goals',
+            'totalTargetAmount',
+            'totalCurrentAmount',
+            'recentDeposits',
+            'depositsByGoal',
+            'monthlyTrend',
+            'goalsData',
+            'categoryData',
+            'monthlyGoals',
+            'monthlyDeposits'
         ));
     }
 
