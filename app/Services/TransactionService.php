@@ -220,4 +220,38 @@ class TransactionService
             'transaction_count' => $transactions->count(),
         ];
     }
+
+    /**
+     * Get monthly income for current month.
+     */
+    public function getMonthlyIncome()
+    {
+        return Transaction::where('type', 'income')
+            ->whereMonth('transaction_date', now()->month)
+            ->whereYear('transaction_date', now()->year)
+            ->sum('amount');
+    }
+
+    /**
+     * Get monthly expense for current month.
+     */
+    public function getMonthlyExpense()
+    {
+        return Transaction::where('type', 'expense')
+            ->whereMonth('transaction_date', now()->month)
+            ->whereYear('transaction_date', now()->year)
+            ->sum('amount');
+    }
+
+    /**
+     * Get recent transactions.
+     */
+    public function getRecentTransactions(int $limit = 5)
+    {
+        return Transaction::with('account')
+            ->orderBy('transaction_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
 }

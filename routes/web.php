@@ -2,14 +2,16 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\DepositController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +24,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Accounts
+    Route::resource('accounts', AccountController::class);
+    
+    // Categories
+    Route::resource('categories', CategoryController::class);
+    
+    // Budgets
+    Route::resource('budgets', BudgetController::class);
+    
+    // Transactions
+    Route::resource('transactions', TransactionController::class);
+    
+    // Goals
+    Route::resource('goals', GoalController::class);
+    Route::post('goals/{goal}/deposits', [DepositController::class, 'store'])->name('goals.deposits.store');
+    
+    // Calendar
+    Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('calendar/transactions', [CalendarController::class, 'getTransactions'])->name('calendar.transactions');
+    
+    // Reports
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
 // Admin Routes
@@ -35,38 +61,6 @@ Route::middleware(['auth', 'role:Super Admin|Admin'])->prefix('admin')->name('ad
         Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assign-role');
         Route::delete('/users/{user}/remove-role', [UserController::class, 'removeRole'])->name('users.remove-role');
     });
-});
-
-// Financial Management Routes (BAGUS)
-Route::middleware(['auth'])->group(function () {
-    // Account Management
-    Route::resource('accounts', AccountController::class);
-    
-    // Transaction Management
-    Route::resource('transactions', TransactionController::class);
-    
-    // Calendar View
-    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
-    Route::get('/calendar/transactions', [CalendarController::class, 'getTransactions'])->name('calendar.transactions');
-});
-
-// Goals & Targets (LIGA)
-Route::middleware(['auth'])->group(function () {
-    Route::resource('goals', GoalController::class);
-    
-    // Deposits for goals
-    Route::get('/goals/{goal}/deposits/create', [DepositController::class, 'create'])->name('deposits.create');
-    Route::post('/goals/{goal}/deposits', [DepositController::class, 'store'])->name('deposits.store');
-    Route::delete('/deposits/{deposit}', [DepositController::class, 'destroy'])->name('deposits.destroy');
-});
-
-// Reports (LIGA)
-Route::middleware(['auth', 'permission:view reports'])->group(function () {
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/goals', [ReportController::class, 'goals'])->name('reports.goals');
-    Route::get('/reports/deposits', [ReportController::class, 'deposits'])->name('reports.deposits');
-    Route::get('/reports/charts', [ReportController::class, 'charts'])->name('reports.charts');
-    Route::post('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
 require __DIR__.'/auth.php';
