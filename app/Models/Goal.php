@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Goal extends Model
+{
+    protected $fillable = [
+        'title',
+        'description',
+        'target_amount',
+        'current_amount',
+        'start_date',
+        'end_date',
+        'status',
+        'category',
+        'created_by',
+    ];
+
+    protected $casts = [
+        'target_amount' => 'decimal:2',
+        'current_amount' => 'decimal:2',
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function deposits(): HasMany
+    {
+        return $this->hasMany(Deposit::class);
+    }
+
+    public function getProgressPercentageAttribute(): float
+    {
+        if ($this->target_amount == 0) return 0;
+        return min(($this->current_amount / $this->target_amount) * 100, 100);
+    }
+
+    public function getRemainingAmountAttribute(): float
+    {
+        return max($this->target_amount - $this->current_amount, 0);
+    }
+}

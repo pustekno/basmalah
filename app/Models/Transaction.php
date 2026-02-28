@@ -63,4 +63,12 @@ class Transaction extends Model
     {
         return 'Rp ' . number_format($this->amount / 100, 0, ',', '.');
     }
+
+    /**
+     * Get the date attribute (alias for transaction_date).
+     */
+    public function getDateAttribute()
+    {
+        return $this->transaction_date;
+    }
 }

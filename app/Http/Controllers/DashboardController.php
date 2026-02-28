@@ -19,31 +19,11 @@ class DashboardController extends Controller
 
     public function index()
     {
-        // Get financial statistics
-        $totalBalance = $this->accountService->getTotalBalance();
-        $accounts = $this->accountService->getAllAccounts();
-        
-        // Get this month's statistics
-        $thisMonthStats = $this->transactionService->getStatistics([
-            'start_date' => now()->startOfMonth(),
-            'end_date' => now()->endOfMonth(),
-        ]);
-        
-        // Get last 30 days transactions for chart
-        $last30Days = $this->transactionService->getStatistics([
-            'start_date' => now()->subDays(30),
-            'end_date' => now(),
-        ]);
-        
-        // Get recent transactions
-        $recentTransactions = $this->transactionService->getAllTransactions(['per_page' => 5]);
-        
-        return view('dashboard', compact(
-            'totalBalance',
-            'accounts',
-            'thisMonthStats',
-            'last30Days',
-            'recentTransactions'
-        ));
+        $totalBalance = (float) $this->accountService->getTotalBalance();
+        $monthlyIncome = $this->transactionService->getMonthlyIncome();
+        $monthlyExpense = $this->transactionService->getMonthlyExpense();
+        $recentTransactions = $this->transactionService->getRecentTransactions(5);
+
+        return view('dashboard', compact('totalBalance', 'monthlyIncome', 'monthlyExpense', 'recentTransactions'));
     }
 }

@@ -37,27 +37,6 @@
                     </x-nav-link>
                     @endrole
 
-                    <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')" class="inline-flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                        </svg>
-                        {{ __('Accounts') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')" class="inline-flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        {{ __('Transactions') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')" class="inline-flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        {{ __('Calendar') }}
-                    </x-nav-link>
-
                     @can('manage users')
                     <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" class="inline-flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,8 +48,11 @@
                 </div>
             </div>
 
-            <!-- Right Side: Dark Mode Toggle & Settings Dropdown -->
+            <!-- Right Side: Language Switcher, Dark Mode Toggle & Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:gap-3">
+                <!-- Language Switcher -->
+                <x-language-switcher />
+
                 <!-- Dark Mode Toggle -->
                 <button
                     @click="darkMode = !darkMode"
@@ -120,14 +102,12 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();"
-                                    class="flex items-center gap-2 text-red-600 dark:text-red-400">
+                            <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm leading-5 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition duration-150 ease-in-out">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                 </svg>
                                 {{ __('Log Out') }}
-                            </x-dropdown-link>
+                            </button>
                         </form>
                     </x-slot>
                 </x-dropdown>
@@ -157,26 +137,6 @@
                 {{ __('Admin Panel') }}
             </x-responsive-nav-link>
             @endrole
-
-            <x-responsive-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
-                {{ __('Accounts') }}
-            </x-responsive-nav-link>
-
-            @can('view transactions')
-            <x-responsive-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')">
-                {{ __('Transactions') }}
-            </x-responsive-nav-link>
-            @endcan
-
-            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
-                {{ __('Calendar') }}
-            </x-responsive-nav-link>
-
-            @can('view reports')
-            <x-responsive-nav-link href="#" :active="false">
-                {{ __('Reports') }}
-            </x-responsive-nav-link>
-            @endcan
 
             @can('manage users')
             <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
@@ -219,10 +179,9 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault(); this.closest('form').submit();">
+                    <button type="submit" class="w-full text-left block px-4 py-2 text-base font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out">
                         {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    </button>
                 </form>
             </div>
         </div>

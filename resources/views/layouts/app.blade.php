@@ -101,121 +101,120 @@
     </head>
     <body class="font-sans antialiased bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 dark:bg-slate-900 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <div class="min-h-screen">
-            @include('layouts.navigation')
+            @include('layouts.sidebar')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-slate-700 shadow-sm">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            <!-- Main Content Area -->
+            <div class="lg:ml-64">
+                <!-- Top Bar -->
+                <header class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-slate-700 shadow-sm sticky top-0 z-30">
+                    <div class="px-4 sm:px-6 lg:px-8 py-4">
+                        <div class="flex items-center justify-between">
+                            <!-- Page Title -->
+                            @isset($header)
+                                <div>
+                                    {{ $header }}
+                                </div>
+                            @else
+                                <div class="text-xl font-bold text-gray-900 dark:text-white">Dashboard</div>
+                            @endisset
+
+                            <!-- Right Side Actions -->
+                            <div class="flex items-center gap-4">
+                                <!-- Language Switcher -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">{{ app()->getLocale() }}</span>
+                                    </button>
+
+                                    <div x-show="open" 
+                                         @click.away="open = false"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="transform opacity-0 scale-95"
+                                         x-transition:enter-end="transform opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75"
+                                         x-transition:leave-start="transform opacity-100 scale-100"
+                                         x-transition:leave-end="transform opacity-0 scale-95"
+                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-slate-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                         style="display: none;">
+                                        
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="id">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'id' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇮🇩 Indonesia
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="en">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'en' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇬🇧 English
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="es">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'es' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇪🇸 Español
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="tr">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'tr' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇹🇷 Türkçe
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Dark Mode Toggle -->
+                                <button @click="darkMode = !darkMode" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                    <svg x-show="!darkMode" class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                    </svg>
+                                    <svg x-show="darkMode" class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Notifications -->
+                                <button class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </header>
-            @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main class="p-4 sm:p-6 lg:p-8">
+                    {{ $slot }}
+                </main>
 
-            <!-- Footer -->
-            <footer class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-slate-700 mt-auto">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Brand Section -->
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-md">
-                                    <svg class="w-6 h-6 text-white" viewBox="0 0 48 48" fill="currentColor">
-                                        <path d="M24 2C21.8 2 20 3.8 20 6C20 7.5 20.8 8.8 22 9.5V12H18C16.9 12 16 12.9 16 14V16H14C12.9 16 12 16.9 12 18V20H10C8.9 20 8 20.9 8 22V44H40V22C40 20.9 39.1 20 38 20H36V18C36 16.9 35.1 16 34 16H32V14C32 12.9 31.1 12 30 12H26V9.5C27.2 8.8 28 7.5 28 6C28 3.8 26.2 2 24 2ZM24 5C24.6 5 25 5.4 25 6C25 6.6 24.6 7 24 7C23.4 7 23 6.6 23 6C23 5.4 23.4 5 24 5ZM20 23H28V44H20V23ZM12 23H18V44H12V23ZM30 23H36V44H30V23Z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Sistem Informasi</div>
-                                    <div class="text-sm font-extrabold text-gray-900 dark:text-white">Basmallah</div>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                                Sistem Informasi Manajemen Masjid Modern & Transparan untuk pengelolaan yang lebih baik.
-                            </p>
-                        </div>
-
-                        <!-- Quick Links -->
-                        <div>
-                            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Menu Cepat</h3>
-                            <ul class="space-y-2">
-                                <li>
-                                    <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                        Dashboard
-                                    </a>
-                                </li>
-                                @can('view transactions')
-                                <li>
-                                    <a href="#" class="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                        Transaksi
-                                    </a>
-                                </li>
-                                @endcan
-                                @can('view reports')
-                                <li>
-                                    <a href="#" class="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                        Laporan
-                                    </a>
-                                </li>
-                                @endcan
-                                <li>
-                                    <a href="{{ route('profile.edit') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                        Profil
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Contact Info -->
-                        <div>
-                            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Kontak</h3>
-                            <ul class="space-y-3">
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">info@basmallah.com</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                    </svg>
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">+62 812-3456-7890</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    </svg>
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">Jl. Masjid Raya No. 123, Jakarta</span>
-                                </li>
-                            </ul>
+                <!-- Footer -->
+                <footer class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-slate-700 px-4 sm:px-6 lg:px-8 py-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            &copy; {{ date('Y') }} <span class="font-semibold text-emerald-600 dark:text-emerald-400">Basmallah</span>. All rights reserved.
+                        </p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                            <a href="#" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Privacy</a>
+                            <span>|</span>
+                            <a href="#" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Terms</a>
                         </div>
                     </div>
-
-                    <!-- Bottom Bar -->
-                    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
-                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
-                                &copy; {{ date('Y') }} <span class="font-semibold text-emerald-600 dark:text-emerald-400">Basmallah</span>. Semua hak dilindungi.
-                            </p>
-                            <div class="flex items-center gap-4">
-                                <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                    Kebijakan Privasi
-                                </a>
-                                <span class="text-gray-300 dark:text-gray-600">|</span>
-                                <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200">
-                                    Syarat & Ketentuan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
     </body>
 </html>

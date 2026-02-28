@@ -40,9 +40,9 @@
 
                 <!-- Legend -->
                 <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 p-4">
-                    <div class="flex flex-wrap items-center gap-4">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Legend</span>
-                        <div class="flex flex-wrap gap-3">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-3">Legend</span>
+                        <div class="grid grid-cols-2 gap-2">
                             <div class="flex items-center gap-2">
                                 <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Income</span>
@@ -58,6 +58,14 @@
                             <div class="flex items-center gap-2">
                                 <span class="w-3 h-3 rounded-full bg-amber-400"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Upcoming</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                                <span class="text-xs text-gray-600 dark:text-gray-400">Budget Start</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                <span class="text-xs text-gray-600 dark:text-gray-400">Budget End ✓</span>
                             </div>
                         </div>
                     </div>
@@ -114,37 +122,69 @@
                         .then(data => {
                             const events = [];
                             
-                            data.forEach(dayData => {
-                                const hasIncome = dayData.total_income > 0;
-                                const hasExpense = dayData.total_expense > 0;
-                                const hasUpcoming = dayData.transactions.some(t => t.upcoming === true);
-                                
-                                let color = colors.mixed;
-                                if (hasIncome && !hasExpense && !hasUpcoming) {
-                                    color = colors.income;
-                                } else if (hasExpense && !hasIncome && !hasUpcoming) {
-                                    color = colors.expense;
-                                } else if (hasUpcoming && !hasIncome && !hasExpense) {
-                                    color = colors.upcoming;
-                                }
-                                
-                                const incomeText = hasIncome ? `+Rp ${(dayData.total_income / 100).toLocaleString('id-ID')}` : '';
-                                const expenseText = hasExpense ? `-Rp ${(dayData.total_expense / 100).toLocaleString('id-ID')}` : '';
-                                const upcomingText = hasUpcoming ? '📅' : '';
-                                const separator = (hasIncome && hasExpense) ? ' | ' : ((hasIncome || hasExpense) && hasUpcoming ? ' | ' : '');
-                                
-                                events.push({
-                                    title: `${incomeText}${expenseText}${upcomingText}`,
-                                    start: dayData.date,
-                                    backgroundColor: color,
-                                    borderColor: color,
-                                    extendedProps: {
-                                        transactions: dayData.transactions,
-                                        totalIncome: dayData.total_income,
-                                        totalExpense: dayData.total_expense,
-                                        count: dayData.count
+                            data.forEach(item => {
+                                if (item.type === 'transaction') {
+                                    // Transaction events
+                                    const hasIncome = item.total_income > 0;
+                                    const hasExpense = item.total_expense > 0;
+                                    const hasUpcoming = item.transactions.some(t => t.upcoming === true);
+                                    
+                                    let color = colors.mixed;
+                                    if (hasIncome && !hasExpense && !hasUpcoming) {
+                                        color = colors.income;
+                                    } else if (hasExpense && !hasIncome && !hasUpcoming) {
+                                        color = colors.expense;
+                                    } else if (hasUpcoming && !hasIncome && !hasExpense) {
+                                        color = colors.upcoming;
                                     }
-                                });
+                                    
+                                    const incomeText = hasIncome ? `+Rp ${(item.total_income / 100).toLocaleString('id-ID')}` : '';
+                                    const expenseText = hasExpense ? `-Rp ${(item.total_expense / 100).toLocaleString('id-ID')}` : '';
+                                    const upcomingText = hasUpcoming ? '📅' : '';
+                                    
+                                    events.push({
+                                        title: `${incomeText}${expenseText}${upcomingText}`,
+                                        start: item.date,
+                                        backgroundColor: color,
+                                        borderColor: color,
+                                        extendedProps: {
+                                            type: 'transaction',
+                                            transactions: item.transactions,
+                                            totalIncome: item.total_income,
+                                            totalExpense: item.total_expense,
+                                            count: item.count
+                                        }
+                                    });
+                                } else if (item.type === 'budget_start') {
+                                    // Budget start event
+                                    events.push({
+                                        title: `🎯 ${item.budget.name} Start`,
+                                        start: item.date,
+                                        backgroundColor: '#3b82f6',
+                                        borderColor: '#2563eb',
+                                        textColor: '#ffffff',
+                                        extendedProps: {
+                                            type: 'budget_start',
+                                            budget: item.budget
+                                        }
+                                    });
+                                } else if (item.type === 'budget_end') {
+                                    // Budget end event
+                                    const bgColor = item.budget.exceeded ? '#ef4444' : '#10b981';
+                                    const borderColor = item.budget.exceeded ? '#dc2626' : '#059669';
+                                    
+                                    events.push({
+                                        title: `🏁 ${item.budget.name} End (${item.budget.percentage}%)`,
+                                        start: item.date,
+                                        backgroundColor: bgColor,
+                                        borderColor: borderColor,
+                                        textColor: '#ffffff',
+                                        extendedProps: {
+                                            type: 'budget_end',
+                                            budget: item.budget
+                                        }
+                                    });
+                                }
                             });
                             
                             successCallback(events);
@@ -156,6 +196,141 @@
                 },
                 eventClick: function(info) {
                     const props = info.event.extendedProps;
+                    
+                    if (props.type === 'budget_start') {
+                        // Budget Start Modal
+                        const budget = props.budget;
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 sm:p-8';
+                        modal.innerHTML = `
+                            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-700">
+                                <div class="p-7 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 dark:from-blue-900/30 dark:via-blue-800/20 dark:to-blue-900/30">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Budget Started</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">${info.event.startStr}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-7">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Name</p>
+                                            <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.name}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Category</p>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-4 h-4 rounded" style="background-color: ${budget.color}"></div>
+                                                <p class="font-semibold text-gray-900 dark:text-white">${budget.category}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Amount</p>
+                                            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">${budget.formatted_amount}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Period</p>
+                                            <p class="font-semibold text-gray-900 dark:text-white capitalize">${budget.period}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="/budgets/${budget.id}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition">
+                                            View Budget
+                                        </a>
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-xl transition">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        modal.addEventListener('click', (e) => e.target === modal && modal.remove());
+                        return;
+                    }
+                    
+                    if (props.type === 'budget_end') {
+                        // Budget End Modal
+                        const budget = props.budget;
+                        const statusColor = budget.exceeded ? 'red' : 'green';
+                        const statusText = budget.exceeded ? 'Over Budget!' : 'Within Budget';
+                        const statusBg = budget.exceeded ? 'from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/20' : 'from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20';
+                        
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 sm:p-8';
+                        modal.innerHTML = `
+                            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-700">
+                                <div class="p-7 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r ${statusBg}">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-gradient-to-br from-${statusColor}-500 to-${statusColor}-600 rounded-2xl shadow-xl">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Budget Ended</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">${info.event.startStr}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-7">
+                                    <div class="mb-6">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Status</p>
+                                            <span class="px-3 py-1 rounded-full text-sm font-bold bg-${statusColor}-100 text-${statusColor}-700 dark:bg-${statusColor}-900/60 dark:text-${statusColor}-300">
+                                                ${statusText}
+                                            </span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
+                                            <div class="h-3 rounded-full bg-${statusColor}-600" style="width: ${Math.min(budget.percentage, 100)}%"></div>
+                                        </div>
+                                        <p class="text-right text-sm font-bold text-${statusColor}-600 dark:text-${statusColor}-400">${budget.percentage}%</p>
+                                    </div>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Name</p>
+                                            <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.name}</p>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget</p>
+                                                <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.formatted_amount}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Spent</p>
+                                                <p class="text-lg font-bold text-red-600 dark:text-red-400">${budget.formatted_spent}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Remaining</p>
+                                            <p class="text-2xl font-bold text-${statusColor}-600 dark:text-${statusColor}-400">${budget.formatted_remaining}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="/budgets/${budget.id}" class="flex-1 bg-${statusColor}-600 hover:bg-${statusColor}-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition">
+                                            View Details
+                                        </a>
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-xl transition">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        modal.addEventListener('click', (e) => e.target === modal && modal.remove());
+                        return;
+                    }
+                    
+                    // Transaction events (existing code)
                     let transactionsList = '<div class="space-y-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">';
                     
                     props.transactions.forEach(transaction => {
