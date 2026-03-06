@@ -24,8 +24,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Then seed roles and permissions
+        // Seed masjids first, then roles and permissions
         $this->call([
+            MasjidSeeder::class,
             RolePermissionSeeder::class,
         ]);
     }

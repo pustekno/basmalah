@@ -16,6 +16,59 @@
             </div>
         </div>
 
+        @role('Super Admin|Viewer')
+        <!-- Masjid Switcher (Super Admin & Viewer) -->
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-slate-700">
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" class="w-full flex items-center justify-between px-4 py-2 text-sm bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        <span class="font-medium">
+                            @if(session('active_masjid_id'))
+                                {{ \App\Models\Masjid::find(session('active_masjid_id'))->name }}
+                            @else
+                                All Masjids
+                            @endif
+                        </span>
+                    </div>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.away="open = false" x-transition class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden z-50">
+                    @if(session('active_masjid_id'))
+                    <form method="POST" action="{{ route('masjid.clear') }}">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            View All Masjids
+                        </button>
+                    </form>
+                    <div class="border-t border-gray-200 dark:border-slate-700"></div>
+                    @endif
+                    @foreach(\App\Models\Masjid::where('is_active', true)->get() as $masjid)
+                    <form method="POST" action="{{ route('masjid.switch') }}">
+                        @csrf
+                        <input type="hidden" name="masjid_id" value="{{ $masjid->id }}">
+                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors {{ session('active_masjid_id') == $masjid->id ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : '' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                            {{ $masjid->name }}
+                        </button>
+                    </form>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @endrole
+
         <!-- Navigation Menu -->
         <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
             <!-- Dashboard -->
@@ -42,6 +95,7 @@
                 <div class="border-t border-gray-200 dark:border-slate-700"></div>
             </div>
 
+            @can('view categories')
             <!-- Categories -->
             <a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('categories.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,7 +103,9 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.categories') }}</span>
             </a>
+            @endcan
 
+            @can('view budgets')
             <!-- Budgets -->
             <a href="{{ route('budgets.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('budgets.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,12 +113,14 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.budgets') }}</span>
             </a>
+            @endcan
 
             <!-- Divider -->
             <div class="pt-4 pb-2">
                 <div class="border-t border-gray-200 dark:border-slate-700"></div>
             </div>
 
+            @can('view accounts')
             <!-- Accounts -->
             <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('accounts.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +128,9 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.accounts') }}</span>
             </a>
+            @endcan
 
+            @can('view transactions')
             <!-- Transactions -->
             <a href="{{ route('transactions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('transactions.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +138,9 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.transactions') }}</span>
             </a>
+            @endcan
 
+            @can('view goals')
             <!-- Goals -->
             <a href="{{ route('goals.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('goals.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +148,9 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.goals') }}</span>
             </a>
+            @endcan
 
+            @can('view calendar')
             <!-- Calendar -->
             <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('calendar.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,9 +158,10 @@
                 </svg>
                 <span class="font-medium">{{ __('navigation.calendar') }}</span>
             </a>
+            @endcan
 
-            <!-- Reports -->
             @can('view reports')
+            <!-- Reports -->
             <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('reports.*') ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>

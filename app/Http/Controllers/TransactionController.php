@@ -21,6 +21,8 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Transaction::class);
+        
         $filters = $request->only(['account_id', 'type', 'category', 'start_date', 'end_date']);
         $transactions = $this->transactionService->getAllTransactions($filters);
         $accounts = Account::all();
@@ -33,6 +35,8 @@ class TransactionController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('create', Transaction::class);
+        
         $accounts = Account::all();
         $selectedType = $request->get('type', 'expense');
         $selectedAccount = $request->get('account_id');
@@ -44,6 +48,8 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Transaction::class);
+        
         $validated = $request->validate([
             'account_id' => 'required|exists:accounts,id',
             'type' => 'required|in:income,expense',
@@ -66,6 +72,8 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
+        $this->authorize('view', $transaction);
+        
         return view('transactions.show', compact('transaction'));
     }
 
@@ -74,6 +82,8 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
+        $this->authorize('update', $transaction);
+        
         $accounts = Account::all();
         return view('transactions.edit', compact('transaction', 'accounts'));
     }
@@ -83,6 +93,8 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
+        $this->authorize('update', $transaction);
+        
         $validated = $request->validate([
             'account_id' => 'required|exists:accounts,id',
             'type' => 'required|in:income,expense',
@@ -105,6 +117,8 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        $this->authorize('delete', $transaction);
+        
         $this->transactionService->deleteTransaction($transaction);
 
         return redirect()->route('transactions.index')

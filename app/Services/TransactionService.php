@@ -52,6 +52,9 @@ class TransactionService
     public function createTransaction(array $data): Transaction
     {
         return DB::transaction(function () use ($data) {
+            // Get masjid_id
+            $masjidId = $this->getMasjidId();
+
             // Handle proof image upload
             $proofImagePath = null;
             if (isset($data['proof_image']) && $data['proof_image']) {
@@ -68,6 +71,7 @@ class TransactionService
                 'proof_image' => $proofImagePath,
                 'transaction_date' => $data['transaction_date'],
                 'upcoming_flag' => $data['upcoming_flag'] ?? false,
+                'masjid_id' => $masjidId,
             ]);
 
             // Update account balance ONLY if NOT upcoming transaction
@@ -79,6 +83,20 @@ class TransactionService
 
             return $transaction->fresh();
         });
+    }
+
+    /**
+     * Get masjid_id for current user.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        return $user->masjid_id;
     }
 
     /**
