@@ -15,20 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed roles and permissions first
-        $this->call([
-            RolePermissionSeeder::class,
-            SuperAdminSeeder::class,
-        ]);
-
-        // Create test user if not exists
+        // Create or update test user first
         User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
                 'password' => bcrypt('password'),
-                'email_verified_at' => now(),
             ]
         );
+
+        // Seed masjids first, then roles and permissions
+        $this->call([
+            MasjidSeeder::class,
+            RolePermissionSeeder::class,
+        ]);
     }
 }

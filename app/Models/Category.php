@@ -4,7 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Scopes\MasjidScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+#[ScopedBy([MasjidScope::class])]
 class Category extends Model
 {
     use HasFactory;
@@ -18,6 +22,7 @@ class Category extends Model
         'color',
         'is_active',
         'order',
+        'masjid_id',
     ];
 
     protected $casts = [
@@ -31,6 +36,14 @@ class Category extends Model
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    /**
+     * Get the masjid that owns the category.
+     */
+    public function masjid(): BelongsTo
+    {
+        return $this->belongsTo(Masjid::class);
     }
 
     /**

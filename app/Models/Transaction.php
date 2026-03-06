@@ -4,7 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Scopes\MasjidScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+#[ScopedBy([MasjidScope::class])]
 class Transaction extends Model
 {
     use HasFactory;
@@ -23,6 +27,7 @@ class Transaction extends Model
         'proof_image',
         'transaction_date',
         'upcoming_flag',
+        'masjid_id',
     ];
 
     /**
@@ -42,6 +47,14 @@ class Transaction extends Model
     public function account()
     {
         return $this->belongsTo(Account::class);
+    }
+
+    /**
+     * Get the masjid that owns the transaction.
+     */
+    public function masjid(): BelongsTo
+    {
+        return $this->belongsTo(Masjid::class);
     }
 
     /**

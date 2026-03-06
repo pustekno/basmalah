@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('dashboard.title') }}
         </h2>
     </x-slot>
 
@@ -19,9 +19,9 @@
                             </svg>
                         </div>
                     </div>
-                    <h3 class="text-white/80 text-xs font-medium mb-1">Total Balance</h3>
+                    <h3 class="text-white/80 text-xs font-medium mb-1">{{ __('dashboard.total_balance') }}</h3>
                     <p class="text-2xl font-extrabold mb-1">Rp {{ number_format($totalBalance ?? 0, 0, ',', '.') }}</p>
-                    <p class="text-xs text-white/60">Across all accounts</p>
+                    <p class="text-xs text-white/60">{{ __('dashboard.across_all_accounts') }}</p>
                 </div>
 
                 <!-- Monthly Income -->
@@ -33,9 +33,9 @@
                             </svg>
                         </div>
                     </div>
-                    <h3 class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">Monthly Income</h3>
+                    <h3 class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">{{ __('dashboard.monthly_income') }}</h3>
                     <p class="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Rp {{ number_format($monthlyIncome ?? 0, 0, ',', '.') }}</p>
-                    <p class="text-xs text-gray-400">This month</p>
+                    <p class="text-xs text-gray-400">{{ __('dashboard.this_month') }}</p>
                 </div>
 
                 <!-- Monthly Expense -->
@@ -47,9 +47,9 @@
                             </svg>
                         </div>
                     </div>
-                    <h3 class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">Monthly Expense</h3>
+                    <h3 class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">{{ __('dashboard.monthly_expense') }}</h3>
                     <p class="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Rp {{ number_format($monthlyExpense ?? 0, 0, ',', '.') }}</p>
-                    <p class="text-xs text-gray-400">This month</p>
+                    <p class="text-xs text-gray-400">{{ __('dashboard.this_month') }}</p>
                 </div>
             </div>
 
@@ -59,32 +59,32 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    New Transaction
+                    {{ __('dashboard.new_transaction') }}
                 </a>
                 <a href="{{ route('accounts.index') }}" class="flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-xl font-semibold transition shadow-lg border border-gray-200 dark:border-gray-700">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
-                    Accounts
+                    {{ __('navigation.accounts') }}
                 </a>
                 <a href="{{ route('goals.index') }}" class="flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-xl font-semibold transition shadow-lg border border-gray-200 dark:border-gray-700">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Goals
+                    {{ __('navigation.goals') }}
                 </a>
                 <a href="{{ route('reports.index') }}" class="flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-xl font-semibold transition shadow-lg border border-gray-200 dark:border-gray-700">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    Reports
+                    {{ __('navigation.reports') }}
                 </a>
             </div>
 
             <!-- Recent Transactions -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.recent_transactions') }}</h3>
                 </div>
                 <div class="p-6">
                     @if(isset($recentTransactions) && $recentTransactions->count() > 0)
@@ -116,7 +116,7 @@
                         </div>
                         <div class="mt-4 text-center">
                             <a href="{{ route('transactions.index') }}" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold">
-                                View All Transactions →
+                                {{ __('dashboard.view_all_transactions') }} →
                             </a>
                         </div>
                     @else
@@ -124,9 +124,9 @@
                             <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <p class="text-gray-500 dark:text-gray-400">No transactions yet</p>
+                            <p class="text-gray-500 dark:text-gray-400">{{ __('dashboard.no_transactions') }}</p>
                             <a href="{{ route('transactions.create') }}" class="inline-block mt-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold">
-                                Create your first transaction →
+                                {{ __('dashboard.create_first_transaction') }} →
                             </a>
                         </div>
                     @endif
