@@ -1,16 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-extrabold text-xl text-gray-900 dark:text-white leading-tight">
-                {{ __('Goals & Targets') }}
-            </h2>
-            <a href="{{ route('goals.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-xl font-semibold text-sm text-white hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Tambah Target Baru
-            </a>
-        </div>
+        <h2 class="font-extrabold text-xl text-gray-900 dark:text-white leading-tight">
+            {{ __('Goals & Targets') }}
+        </h2>
+        <a href="{{ route('goals.create') }}" class="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-primary-dark transition-colors shadow-md hover:shadow-lg">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Tambah Target Baru
+        </a>
     </x-slot>
 
     <div class="py-6">

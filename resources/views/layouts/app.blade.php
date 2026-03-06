@@ -19,17 +19,12 @@
                 theme: {
                     extend: {
                         colors: {
-                            emerald: {
-                                50:  '#ecfdf5',
-                                100: '#d1fae5',
-                                200: '#a7f3d0',
-                                300: '#6ee7b7',
-                                400: '#34d399',
-                                500: '#10b981',
-                                600: '#059669',
-                                700: '#047857',
-                                800: '#065f46',
-                                900: '#064e3b',
+                            primary: {
+                                DEFAULT: '#1b9b8a',
+                                light: '#2cb8a0',
+                                lightest: '#e8f7f4',
+                                dark: '#0d5d52',
+                                darker: '#044139',
                             },
                             gold: {
                                 300: '#fde68a',
@@ -99,27 +94,126 @@
             }
         </style>
     </head>
-    <body class="font-sans antialiased bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 dark:bg-slate-900 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
-        <div class="min-h-screen">
+    <body class="font-sans antialiased bg-white dark:bg-slate-900 flex flex-col min-h-screen" x-data="toastNotification()">
+        <!-- Toast Notification Container -->
+        <div x-cloak>
+            <!-- Success Toast -->
+            <div x-show="showSuccess" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="-translate-y-4 opacity-0"
+                 x-transition:enter-end="translate-y-0 opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="translate-y-0 opacity-100"
+                 x-transition:leave-end="-translate-y-4 opacity-0"
+                 class="fixed top-20 right-6 z-50 max-w-sm w-full">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 p-4 flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-lightest dark:bg-primary-dark/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white">Success</p>
+                        <p x-text="successMessage" class="text-sm text-gray-600 dark:text-gray-300 mt-0.5"></p>
+                    </div>
+                    <button @click="showSuccess = false" class="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Toast -->
+            <div x-show="showError" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="-translate-y-4 opacity-0"
+                 x-transition:enter-end="translate-y-0 opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="translate-y-0 opacity-100"
+                 x-transition:leave-end="-translate-y-4 opacity-0"
+                 class="fixed top-20 right-6 z-50 max-w-sm w-full">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-red-100 dark:border-red-900/30 p-4 flex items-start gap-3">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white">Error</p>
+                        <p x-text="errorMessage" class="text-sm text-gray-600 dark:text-gray-300 mt-0.5"></p>
+                    </div>
+                    <button @click="showError = false" class="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Data Initialization -->
+        @if(session('success'))
+            <div x-init="showSuccessMessage('{{ session('success') }}')"></div>
+        @endif
+        @if(session('error'))
+            <div x-init="showErrorMessage('{{ session('error') }}')"></div>
+        @endif
+        @if($errors->any())
+            <div x-init="showErrorMessage('{{ $errors->first() }}')"></div>
+        @endif
+
+        <script>
+            function toastNotification() {
+                return {
+                    showSuccess: false,
+                    showError: false,
+                    successMessage: '',
+                    errorMessage: '',
+                    
+                    showSuccessMessage(message) {
+                        this.successMessage = message;
+                        this.showSuccess = true;
+                        setTimeout(() => {
+                            this.showSuccess = false;
+                        }, 5000);
+                    },
+                    
+                    showErrorMessage(message) {
+                        this.errorMessage = message;
+                        this.showError = true;
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 5000);
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            [x-cloak] { display: none !important; }
+        </style>
+        
+        <div class="flex-1 flex">
             @include('layouts.sidebar')
 
             <!-- Main Content Area -->
-            <div class="lg:ml-64">
+            <div class="lg:ml-64 flex-1 flex flex-col">
                 <!-- Top Bar -->
-                <header class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-slate-700 shadow-sm sticky top-0 z-30">
-                    <div class="px-4 sm:px-6 lg:px-8 py-4">
-                        <div class="flex items-center justify-between">
-                            <!-- Page Title -->
+                <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
+                    <div class="px-4 sm:px-6 lg:px-8 py-3">
+                        <div class="flex items-center justify-between gap-4">
+                            <!-- Left Section - Title & Actions -->
                             @isset($header)
-                                <div>
+                                <div class="flex items-center gap-6 flex-1">
                                     {{ $header }}
                                 </div>
                             @else
                                 <div class="text-xl font-bold text-gray-900 dark:text-white">Dashboard</div>
                             @endisset
 
-                            <!-- Right Side Actions -->
-                            <div class="flex items-center gap-4">
+                            <!-- Right Section - Icons -->
+                            <div class="flex items-center gap-2">
                                 <!-- Language Switcher -->
                                 <div class="relative" x-data="{ open: false }">
                                     <button @click="open = !open" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
@@ -197,20 +291,20 @@
                 </header>
 
                 <!-- Page Content -->
-                <main class="p-4 sm:p-6 lg:p-8">
+                <main class="flex-1 p-4 sm:p-6 lg:p-8 pb-24">
                     {{ $slot }}
                 </main>
 
                 <!-- Footer -->
-                <footer class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-slate-700 px-4 sm:px-6 lg:px-8 py-6">
+                <footer class="bg-white border-t border-gray-200 mt-12 lg:mt-16 px-6 lg:px-8 py-3">
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            &copy; {{ date('Y') }} <span class="font-semibold text-emerald-600 dark:text-emerald-400">Basmallah</span>. All rights reserved.
+                        <p class="text-xs text-gray-500">
+                            &copy; {{ date('Y') }} <a href="#" class="text-primary hover:underline">Basmallah</a>. All rights reserved.
                         </p>
-                        <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                            <a href="#" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Privacy</a>
-                            <span>|</span>
-                            <a href="#" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Terms</a>
+                        <div class="flex items-center gap-3 text-xs">
+                            <a href="#" class="text-primary hover:underline">Privacy</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-primary hover:underline">Terms</a>
                         </div>
                     </div>
                 </footer>

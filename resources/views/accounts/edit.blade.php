@@ -8,7 +8,7 @@
                     </svg>
                 </a>
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-emerald-500/20">
+                    <div class="p-2.5 bg-primary rounded-xl shadow-lg shadow-primary/20">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
@@ -64,7 +64,7 @@
                                     </svg>
                                 </div>
                                 <select name="type" id="type" required
-                                    class="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-gray-700 border-0 rounded-xl text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-inner">
+                                    class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 dark:bg-slate-900 text-gray-900 dark:text-gray-300 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200">
                                     <option value="cash" {{ old('type', $account->type) === 'cash' ? 'selected' : '' }}>Kas Kecil (Cash)</option>
                                     <option value="bank" {{ old('type', $account->type) === 'bank' ? 'selected' : '' }}>Kas Besar (Bank)</option>
                                     <option value="e-wallet" {{ old('type', $account->type) === 'e-wallet' ? 'selected' : '' }}>E-Wallet</option>
