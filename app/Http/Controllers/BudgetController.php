@@ -60,7 +60,8 @@ class BudgetController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Convert amount to cents
+        // Convert amount to cents (remove decimal separator and multiply by 100)
+        // The amount field now contains the raw numeric value without formatting
         $validated['amount'] = $validated['amount'] * 100;
 
         // Add masjid_id

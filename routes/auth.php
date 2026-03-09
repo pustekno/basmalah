@@ -18,6 +18,9 @@ Route::middleware('guest')->group(function () {
     Route::get('auth', [AuthController::class, 'showAuthPage'])
         ->name('auth');
     
+    Route::get('login', [AuthController::class, 'showAuthPage'])
+        ->name('login');
+    
     Route::post('auth/login', [AuthController::class, 'login'])
         ->name('auth.login');
     
@@ -25,15 +28,15 @@ Route::middleware('guest')->group(function () {
         ->name('auth.register');
 
     // Keep standard routes for backward compatibility
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+    // Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    //     ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [AuthController::class, 'login']);
 
-    Route::get('register', [RegisteredUserController::class, 'create'])
+    Route::get('register', [AuthController::class, 'showAuthPage'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [AuthController::class, 'register']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

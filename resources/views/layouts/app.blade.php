@@ -20,17 +20,11 @@
                     extend: {
                         colors: {
                             primary: {
-                                DEFAULT: '#1b9b8a',
-                                light: '#2cb8a0',
-                                lightest: '#e8f7f4',
-                                dark: '#0d5d52',
-                                darker: '#044139',
-                            },
-                            gold: {
-                                300: '#fde68a',
-                                400: '#fbbf24',
-                                500: '#D4AF37',
-                                600: '#b7950b',
+                                DEFAULT: '#B8860B',
+                                light: '#DAA520',
+                                lightest: '#FEF3C7',
+                                dark: '#8B6508',
+                                darker: '#654C0F',
                             }
                         },
                         fontFamily: {
@@ -63,29 +57,13 @@
         <style>
             * { font-family: 'Plus Jakarta Sans', sans-serif; }
             
-            /* Gradient text */
-            .gradient-text {
-                background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #D4AF37 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-            
-            /* Gold accent text */
-            .gold-text {
-                background: linear-gradient(135deg, #fbbf24 0%, #D4AF37 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-            
             /* Card hover effect */
             .card-hover {
                 transition: all 0.3s ease;
             }
             .card-hover:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             }
             
             /* Smooth transitions */
@@ -107,8 +85,8 @@
                  x-transition:leave-end="-translate-y-4 opacity-0"
                  class="fixed top-20 right-6 z-50 max-w-sm w-full">
                 <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-100 dark:border-slate-700 p-4 flex items-start gap-3">
-                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-lightest dark:bg-primary-dark/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>

@@ -21,7 +21,8 @@ class AuthController extends Controller
         $showRegister = $request->query('tab') === 'register' 
             || $request->query('register') === 'true'
             || $request->query('plan') === 'pro'
-            || $request->query('plan') === 'ultra';
+            || $request->query('plan') === 'ultra'
+            || $request->routeIs('register');
             
         return view('auth.auth-page', [
             'showRegister' => $showRegister,
@@ -30,20 +31,44 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle login request - redirect to standard Laravel login
+     * Handle login request
      */
     public function login(Request $request)
     {
-        // Redirect to standard Laravel authentication
-        return redirect()->route('login');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended(route('dashboard'));
+        }
+
+        return back()->withErrors([
+            'email' => __('auth.failed'),
+        ])->withInput($request->only('email'));
     }
 
     /**
-     * Handle registration request - redirect to standard Laravel register
+     * Handle registration request
      */
     public function register(Request $request)
     {
-        // Redirect to standard Laravel registration
-        return redirect()->route('register');
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
     }
 }

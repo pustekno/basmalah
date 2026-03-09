@@ -3,13 +3,13 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <div>
-                    <h2 class="font-extrabold text-xl text-gray-900 dark:text-white leading-tight">
-                        {{ __('Transaction Calendar') }}
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Transaction Calendar
                     </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Track your financial activities at a glance</p>
                 </div>
             </div>
-            <a href="{{ route('transactions.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-xl font-semibold text-sm text-white hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl">
+            <a href="{{ route('transactions.create') }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-xl font-medium text-sm text-white hover:bg-yellow-700 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -24,10 +24,10 @@
             <!-- Filter & Legend Row -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <!-- Filter -->
-                <div class="lg:col-span-3 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 p-4">
+                <div class="lg:col-span-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
                     <div class="flex flex-wrap items-center gap-4">
                         <label for="account_filter" class="text-sm font-medium text-gray-600 dark:text-gray-400">Filter by Account</label>
-                        <select id="account_filter" class="flex-1 min-w-[200px] px-4 py-2 bg-gray-50 dark:bg-gray-700 border-0 rounded-lg text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <select id="account_filter" class="flex-1 min-w-[200px] px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 dark:bg-slate-900 dark:text-gray-300 text-gray-900 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/30">
                             <option value="">All Accounts</option>
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $selectedAccount == $account->id ? 'selected' : '' }}>
@@ -39,33 +39,25 @@
                 </div>
 
                 <!-- Legend -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 p-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-3">Legend</span>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
+                    <div class="space-y-3">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-2">Legend</span>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Income</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-gray-400"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Expense</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-violet-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-300"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Mixed</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="w-3 h-3 rounded-full bg-amber-400"></span>
                                 <span class="text-xs text-gray-600 dark:text-gray-400">Upcoming</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                                <span class="text-xs text-gray-600 dark:text-gray-400">Budget Start</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                                <span class="text-xs text-gray-600 dark:text-gray-400">Budget End ✓</span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +65,7 @@
             </div>
 
             <!-- Calendar Card -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="p-6">
                     <div id="calendar" class="calendar-ultra"></div>
                 </div>
@@ -92,11 +84,11 @@
             const calendarEl = document.getElementById('calendar');
             const accountFilter = document.getElementById('account_filter');
             
-            // Premium theme colors
+            // Gold theme colors
             const colors = {
-                income: '#10b981',
-                expense: '#f43f5e',
-                mixed: '#8b5cf6',
+                income: '#f59e0b',
+                expense: '#6b7280',
+                mixed: '#fbbf24',
                 upcoming: '#fbbf24'
             };
             
@@ -124,7 +116,6 @@
                             
                             data.forEach(item => {
                                 if (item.type === 'transaction') {
-                                    // Transaction events
                                     const hasIncome = item.total_income > 0;
                                     const hasExpense = item.total_expense > 0;
                                     const hasUpcoming = item.transactions.some(t => t.upcoming === true);
@@ -156,12 +147,11 @@
                                         }
                                     });
                                 } else if (item.type === 'budget_start') {
-                                    // Budget start event
                                     events.push({
                                         title: `🎯 ${item.budget.name} Start`,
                                         start: item.date,
-                                        backgroundColor: '#3b82f6',
-                                        borderColor: '#2563eb',
+                                        backgroundColor: '#f59e0b',
+                                        borderColor: '#d97706',
                                         textColor: '#ffffff',
                                         extendedProps: {
                                             type: 'budget_start',
@@ -169,9 +159,8 @@
                                         }
                                     });
                                 } else if (item.type === 'budget_end') {
-                                    // Budget end event
-                                    const bgColor = item.budget.exceeded ? '#ef4444' : '#10b981';
-                                    const borderColor = item.budget.exceeded ? '#dc2626' : '#059669';
+                                    const bgColor = item.budget.exceeded ? '#ef4444' : '#f59e0b';
+                                    const borderColor = item.budget.exceeded ? '#dc2626' : '#d97706';
                                     
                                     events.push({
                                         title: `🏁 ${item.budget.name} End (${item.budget.percentage}%)`,
@@ -198,52 +187,40 @@
                     const props = info.event.extendedProps;
                     
                     if (props.type === 'budget_start') {
-                        // Budget Start Modal
                         const budget = props.budget;
                         const modal = document.createElement('div');
-                        modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 sm:p-8';
+                        modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
                         modal.innerHTML = `
-                            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-700">
-                                <div class="p-7 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 dark:from-blue-900/30 dark:via-blue-800/20 dark:to-blue-900/30">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700">
+                                <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                                     <div class="flex items-center gap-4">
-                                        <div class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl">
+                                        <div class="p-3 bg-yellow-600 rounded-xl">
                                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Budget Started</h3>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">${info.event.startStr}</p>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Budget Started</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">${info.event.startStr}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-7">
+                                <div class="p-6">
                                     <div class="space-y-4">
                                         <div>
                                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Name</p>
-                                            <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.name}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Category</p>
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-4 h-4 rounded" style="background-color: ${budget.color}"></div>
-                                                <p class="font-semibold text-gray-900 dark:text-white">${budget.category}</p>
-                                            </div>
+                                            <p class="text-lg font-semibold text-gray-900 dark:text-white">${budget.name}</p>
                                         </div>
                                         <div>
                                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Amount</p>
-                                            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">${budget.formatted_amount}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Period</p>
-                                            <p class="font-semibold text-gray-900 dark:text-white capitalize">${budget.period}</p>
+                                            <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">${budget.formatted_amount}</p>
                                         </div>
                                     </div>
                                     <div class="mt-6 flex gap-3">
-                                        <a href="/budgets/${budget.id}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition">
+                                        <a href="/budgets/${budget.id}" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
                                             View Budget
                                         </a>
-                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-xl transition">
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
                                             Close
                                         </button>
                                     </div>
@@ -256,47 +233,45 @@
                     }
                     
                     if (props.type === 'budget_end') {
-                        // Budget End Modal
                         const budget = props.budget;
-                        const statusColor = budget.exceeded ? 'red' : 'green';
+                        const statusColor = budget.exceeded ? 'red' : 'yellow';
                         const statusText = budget.exceeded ? 'Over Budget!' : 'Within Budget';
-                        const statusBg = budget.exceeded ? 'from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/20' : 'from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20';
                         
                         const modal = document.createElement('div');
-                        modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 sm:p-8';
+                        modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
                         modal.innerHTML = `
-                            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-700">
-                                <div class="p-7 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r ${statusBg}">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700">
+                                <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                                     <div class="flex items-center gap-4">
-                                        <div class="p-3 bg-gradient-to-br from-${statusColor}-500 to-${statusColor}-600 rounded-2xl shadow-xl">
+                                        <div class="p-3 bg-${statusColor}-500 rounded-xl">
                                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Budget Ended</h3>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">${info.event.startStr}</p>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Budget Ended</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">${info.event.startStr}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-7">
+                                <div class="p-6">
                                     <div class="mb-6">
                                         <div class="flex items-center justify-between mb-2">
-                                            <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Status</p>
-                                            <span class="px-3 py-1 rounded-full text-sm font-bold bg-${statusColor}-100 text-${statusColor}-700 dark:bg-${statusColor}-900/60 dark:text-${statusColor}-300">
+                                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
+                                            <span class="px-3 py-1 rounded-full text-sm font-medium bg-${statusColor}-100 text-${statusColor}-700 dark:bg-${statusColor}-900/60 dark:text-${statusColor}-300">
                                                 ${statusText}
                                             </span>
                                         </div>
-                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
-                                            <div class="h-3 rounded-full bg-${statusColor}-600" style="width: ${Math.min(budget.percentage, 100)}%"></div>
+                                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3 mb-2">
+                                            <div class="h-3 rounded-full bg-yellow-500" style="width: ${Math.min(budget.percentage, 100)}%"></div>
                                         </div>
-                                        <p class="text-right text-sm font-bold text-${statusColor}-600 dark:text-${statusColor}-400">${budget.percentage}%</p>
+                                        <p class="text-right text-sm font-bold text-gray-900 dark:text-white">${budget.percentage}%</p>
                                     </div>
                                     
                                     <div class="space-y-4">
                                         <div>
                                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget Name</p>
-                                            <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.name}</p>
+                                            <p class="text-lg font-semibold text-gray-900 dark:text-white">${budget.name}</p>
                                         </div>
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
@@ -305,20 +280,16 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Spent</p>
-                                                <p class="text-lg font-bold text-red-600 dark:text-red-400">${budget.formatted_spent}</p>
+                                                <p class="text-lg font-bold text-gray-900 dark:text-white">${budget.formatted_spent}</p>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Remaining</p>
-                                            <p class="text-2xl font-bold text-${statusColor}-600 dark:text-${statusColor}-400">${budget.formatted_remaining}</p>
                                         </div>
                                     </div>
                                     
                                     <div class="mt-6 flex gap-3">
-                                        <a href="/budgets/${budget.id}" class="flex-1 bg-${statusColor}-600 hover:bg-${statusColor}-700 text-white font-semibold py-3 px-4 rounded-xl text-center transition">
+                                        <a href="/budgets/${budget.id}" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
                                             View Details
                                         </a>
-                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-xl transition">
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
                                             Close
                                         </button>
                                     </div>
@@ -330,30 +301,29 @@
                         return;
                     }
                     
-                    // Transaction events (existing code)
-                    let transactionsList = '<div class="space-y-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">';
+                    // Transaction events
+                    let transactionsList = '<div class="space-y-3 max-h-[320px] overflow-y-auto pr-2">';
                     
                     props.transactions.forEach(transaction => {
-                        const typeColor = transaction.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+                        const typeColor = transaction.type === 'income' ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400';
                         const typeIcon = transaction.type === 'income' ? '↑' : '↓';
                         const isUpcoming = transaction.upcoming === true;
-                        const upcomingBadge = isUpcoming ? '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">Upcoming</span>' : '';
+                        const upcomingBadge = isUpcoming ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/60 dark:text-yellow-300">Upcoming</span>' : '';
                         const opacity = isUpcoming ? 'opacity-70' : '';
                         
                         transactionsList += `
-                            <div class="p-4.5 bg-gray-50/50 dark:bg-gray-700/30 rounded-2xl ${opacity} hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 border border-gray-100 dark:border-gray-600 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-lg">
+                            <div class="p-4 bg-gray-50 dark:bg-slate-700/30 rounded-xl ${opacity} hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-all border border-gray-100 dark:border-slate-600">
                                 <div class="flex justify-between items-start gap-4">
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-2.5 flex-wrap mb-2">
-                                            <p class="font-bold text-gray-900 dark:text-gray-100">${transaction.category}</p>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <p class="font-medium text-gray-900 dark:text-white">${transaction.category}</p>
                                             ${upcomingBadge}
                                         </div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">${transaction.account}</p>
-                                        ${transaction.description ? `<p class="text-xs text-gray-400 dark:text-gray-500 mt-2 line-clamp-2">${transaction.description}</p>` : ''}
                                     </div>
                                     <div class="text-right flex-shrink-0">
-                                        <p class="${typeColor} font-extrabold text-lg">${typeIcon} ${transaction.formatted_amount}</p>
-                                        <a href="/transactions/${transaction.id}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hover:underline">View →</a>
+                                        <p class="${typeColor} font-bold text-lg">${typeIcon} ${transaction.formatted_amount}</p>
+                                        <a href="/transactions/${transaction.id}" class="text-xs font-medium text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300">View →</a>
                                     </div>
                                 </div>
                             </div>
@@ -363,47 +333,38 @@
                     transactionsList += '</div>';
                     
                     const netAmount = props.totalIncome - props.totalExpense;
-                    const netColor = netAmount >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-                    const netBg = netAmount >= 0 ? 'bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/20' : 'bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-900/40 dark:to-orange-900/20';
-                    const netBorder = netAmount >= 0 ? 'border-emerald-200 dark:border-emerald-800' : 'border-rose-200 dark:border-rose-800';
+                    const netColor = netAmount >= 0 ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400';
                     
                     const summary = `
                         <div class="mb-6 space-y-4">
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="p-5 bg-gradient-to-br from-emerald-50 to-emerald-100/30 dark:from-emerald-900/50 dark:to-emerald-800/20 rounded-2xl border border-emerald-200/50 dark:border-emerald-800/30">
-                                    <div class="flex items-center gap-2.5 mb-3">
-                                        <span class="p-2 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl shadow-lg shadow-emerald-500/30">
-                                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-5 bg-gray-50 dark:bg-slate-700/30 rounded-xl border border-gray-100 dark:border-slate-600">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                                            <svg class="w-4 h-4 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                                             </svg>
                                         </span>
-                                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Income</p>
+                                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Income</p>
                                     </div>
-                                    <p class="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300">+Rp ${(props.totalIncome / 100).toLocaleString('id-ID')}</p>
+                                    <p class="text-xl font-bold text-gray-900 dark:text-white">+Rp ${(props.totalIncome / 100).toLocaleString('id-ID')}</p>
                                 </div>
-                                <div class="p-5 bg-gradient-to-br from-rose-50 to-rose-100/30 dark:from-rose-900/50 dark:to-rose-800/20 rounded-2xl border border-rose-200/50 dark:border-rose-800/30">
-                                    <div class="flex items-center gap-2.5 mb-3">
-                                        <span class="p-2 bg-gradient-to-br from-rose-400 to-rose-600 rounded-xl shadow-lg shadow-rose-500/30">
-                                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-5 bg-gray-50 dark:bg-slate-700/30 rounded-xl border border-gray-100 dark:border-slate-600">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="p-2 bg-gray-100 dark:bg-slate-600 rounded-lg">
+                                            <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                                             </svg>
                                         </span>
-                                        <p class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">Expense</p>
+                                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Expense</p>
                                     </div>
-                                    <p class="text-2xl font-extrabold text-rose-700 dark:text-rose-300">-Rp ${(props.totalExpense / 100).toLocaleString('id-ID')}</p>
+                                    <p class="text-xl font-bold text-gray-900 dark:text-white">-Rp ${(props.totalExpense / 100).toLocaleString('id-ID')}</p>
                                 </div>
                             </div>
-                            <div class="p-5 ${netBg} rounded-2xl border-2 ${netBorder}">
+                            <div class="p-5 bg-gray-50 dark:bg-slate-700/30 rounded-xl border border-gray-100 dark:border-slate-600">
                                 <div class="flex justify-between items-center">
-                                    <div class="flex items-center gap-3">
-                                        <span class="p-2.5 ${netAmount >= 0 ? 'bg-gradient-to-br from-emerald-400 to-emerald-600' : 'bg-gradient-to-br from-rose-400 to-rose-600'} rounded-xl shadow-lg ${netAmount >= 0 ? 'shadow-emerald-500/30' : 'shadow-rose-500/30'}">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                            </svg>
-                                        </span>
-                                        <p class="text-sm font-bold text-gray-600 dark:text-gray-400">Net Balance</p>
-                                    </div>
-                                    <p class="${netColor} font-extrabold text-3xl">Rp ${(netAmount / 100).toLocaleString('id-ID')}</p>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Balance</p>
+                                    <p class="${netColor} font-bold text-2xl">Rp ${(netAmount / 100).toLocaleString('id-ID')}</p>
                                 </div>
                             </div>
                         </div>
@@ -411,32 +372,30 @@
                     
                     // Create modal
                     const modal = document.createElement('div');
-                    modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 sm:p-8';
+                    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
                     modal.innerHTML = `
-                        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all border border-gray-100 dark:border-gray-700">
-                            <div class="p-7 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-gray-50/80 via-white to-gray-50/80 dark:from-gray-800 dark:via-gray-800/50 dark:to-gray-800">
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-gray-100 dark:border-slate-700">
+                            <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center gap-4">
-                                        <div class="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-xl shadow-emerald-500/25">
+                                        <div class="p-3 bg-yellow-600 rounded-xl">
                                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                             </svg>
                                         </div>
                                         <div>
-                                            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                                Transactions
-                                            </h3>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Transactions</h3>
                                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">${info.event.startStr}</p>
                                         </div>
                                     </div>
-                                    <button onclick="this.closest('.fixed').remove()" class="p-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all">
+                                    <button onclick="this.closest('.fixed').remove()" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </button>
                                 </div>
                             </div>
-                            <div class="p-7 overflow-y-auto" style="max-height: calc(90vh - 220px);">
+                            <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 200px);">
                                 ${summary}
                                 ${transactionsList}
                             </div>
@@ -444,15 +403,12 @@
                     `;
                     
                     document.body.appendChild(modal);
-                    
-                    // Close on outside click
                     modal.addEventListener('click', function(e) {
                         if (e.target === modal) {
                             modal.remove();
                         }
                     });
                     
-                    // Close on Escape key
                     document.addEventListener('keydown', function(e) {
                         if (e.key === 'Escape') {
                             modal.remove();
@@ -461,29 +417,27 @@
                 },
                 eventDidMount: function(info) {
                     info.el.style.cursor = 'pointer';
-                    info.el.style.borderRadius = '10px';
+                    info.el.style.borderRadius = '8px';
                     info.el.style.fontSize = '11px';
-                    info.el.style.fontWeight = '700';
-                    info.el.style.padding = '5px 10px';
-                    info.el.style.boxShadow = '0 3px 8px rgba(0,0,0,0.12)';
-                    info.el.style.transition = 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)';
-                    info.el.style.margin = '3px 0';
+                    info.el.style.fontWeight = '600';
+                    info.el.style.padding = '4px 8px';
+                    info.el.style.margin = '2px 0';
+                    info.el.style.transition = 'all 0.2s ease';
                     
                     info.el.addEventListener('mouseenter', function() {
-                        info.el.style.transform = 'translateY(-3px) scale(1.02)';
-                        info.el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
+                        info.el.style.transform = 'translateY(-2px)';
+                        info.el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
                     });
                     
                     info.el.addEventListener('mouseleave', function() {
-                        info.el.style.transform = 'translateY(0) scale(1)';
-                        info.el.style.boxShadow = '0 3px 8px rgba(0,0,0,0.12)';
+                        info.el.style.transform = 'translateY(0)';
+                        info.el.style.boxShadow = 'none';
                     });
                 }
             });
             
             calendar.render();
             
-            // Reload calendar when account filter changes
             accountFilter.addEventListener('change', function() {
                 calendar.refetchEvents();
             });
@@ -491,182 +445,77 @@
     </script>
     
     <style>
-        /* Ultra Premium Calendar Styles */
         .calendar-ultra {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
         }
         
         .calendar-ultra .fc-toolbar {
-            margin-bottom: 2.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid #f3f4f6;
+            margin-bottom: 1.5rem;
         }
         
         .calendar-ultra .fc-toolbar-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #111827;
-            letter-spacing: -0.03em;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
         }
         
         .calendar-ultra .fc-button {
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%) !important;
-            border: 1px solid #e5e7eb !important;
+            background-color: #f3f4f6 !important;
+            border-color: #e5e7eb !important;
             color: #374151 !important;
-            font-weight: 700 !important;
-            font-size: 0.875rem !important;
-            padding: 0.75rem 1.25rem !important;
-            border-radius: 1rem !important;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+            font-weight: 500 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
         }
         
         .calendar-ultra .fc-button:hover {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
-            border-color: #d1d5db !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08) !important;
+            background-color: #e5e7eb !important;
         }
         
         .calendar-ultra .fc-button-primary:not(:disabled).fc-button-active,
         .calendar-ultra .fc-button-primary:not(:disabled):active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            border-color: #10b981 !important;
+            background-color: #f59e0b !important;
+            border-color: #f59e0b !important;
             color: white !important;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
-            transform: translateY(-1px) !important;
+        }
+        
+        .calendar-ultra .fc-daygrid-day {
+            transition: background-color 0.2s;
+        }
+        
+        .calendar-ultra .fc-daygrid-day:hover {
+            background-color: #f9fafb;
         }
         
         .calendar-ultra .fc-daygrid-day-number {
-            color: #6b7280;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 12px !important;
-        }
-        
-        .calendar-ultra .fc-daygrid-day.fc-day-today {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
-        }
-        
-        .calendar-ultra .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
-            font-weight: 700;
+            font-weight: 500;
+            color: #374151;
+            padding: 0.5rem;
         }
         
         .calendar-ultra .fc-col-header-cell-cushion {
+            font-weight: 600;
             color: #6b7280;
-            font-weight: 800;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 16px 0 !important;
+            padding: 0.75rem 0;
         }
         
         .calendar-ultra .fc-event {
             border: none !important;
-            padding: 5px 10px !important;
         }
         
-        .calendar-ultra .fc-daygrid-day-events {
-            padding: 3px !important;
+        .calendar-ultra .fc-day-today {
+            background-color: #fef3c7 !important;
         }
         
-        .calendar-ultra .fc-daygrid-more-link {
-            color: #6b7280 !important;
-            font-weight: 700 !important;
-            font-size: 11px !important;
-            background: #f3f4f6;
-            padding: 4px 8px;
-            border-radius: 8px;
-            margin: 2px 4px;
-        }
-        
-        .calendar-ultra .fc-popover {
-            border-radius: 20px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 12px 24px -8px rgba(0, 0, 0, 0.15) !important;
-            border: 1px solid #e5e7eb !important;
-            overflow: hidden;
-        }
-        
-        .calendar-ultra .fc-popover-header {
-            background: linear-gradient(to right, #f9fafb, #f3f4f6) !important;
-            font-weight: 800 !important;
-            padding: 16px 20px !important;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .calendar-ultra .fc-toolbar-title {
-                color: #f9fafb;
-            }
-            
-            .calendar-ultra .fc-button {
-                background: linear-gradient(135deg, #374151 0%, #4b5563 100%) !important;
-                border-color: #4b5563 !important;
-                color: #e5e7eb !important;
-            }
-            
-            .calendar-ultra .fc-button:hover {
-                background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%) !important;
-            }
-            
-            .calendar-ultra .fc-daygrid-day-number {
-                color: #9ca3af;
-            }
-            
-            .calendar-ultra .fc-daygrid-day.fc-day-today {
-                background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
-            }
-            
-            .calendar-ultra .fc-col-header-cell-cushion {
-                color: #9ca3af;
-            }
-            
-            .calendar-ultra .fc-daygrid-more-link {
-                color: #d1d5db !important;
-                background: #4b5563;
-            }
-            
-            .calendar-ultra .fc-toolbar {
-                border-bottom-color: #374151;
-            }
-        }
-        
-        /* Custom scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
-        
-        /* Line clamp utility */
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .calendar-ultra .fc-day-today .fc-daygrid-day-number {
+            background-color: #f59e0b;
+            color: white;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </x-app-layout>

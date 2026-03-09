@@ -2,8 +2,8 @@
     <!-- Page header -->
     <div class="mb-8 fade-in-up">
         <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>
-            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Masuk Akun</span>
+            <div class="w-1 h-6 bg-yellow-600 rounded-full"></div>
+            <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-widest">Masuk Akun</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-2">
             Selamat Datang Kembali 👋
@@ -27,7 +27,7 @@
             <div class="relative group">
                 <!-- Icon -->
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
@@ -40,7 +40,7 @@
                     autofocus
                     autocomplete="username"
                     placeholder="nama@email.com"
-                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('email') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('email') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -53,7 +53,7 @@
                     Password
                 </label>
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200">
+                    <a href="{{ route('password.request') }}" class="text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors duration-200">
                         Lupa password?
                     </a>
                 @endif
@@ -61,7 +61,7 @@
             <div class="relative group">
                 <!-- Lock icon -->
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                 </div>
@@ -73,13 +73,13 @@
                     required
                     autocomplete="current-password"
                     placeholder="Masukkan password Anda"
-                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('password') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('password') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
                 <!-- Toggle visibility -->
                 <button
                     type="button"
                     @click="showPass = !showPass"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 z-10"
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors duration-200 z-10"
                     :aria-label="showPass ? 'Sembunyikan password' : 'Tampilkan password'"
                 >
                     <svg x-show="!showPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@
                         name="remember"
                         class="sr-only peer"
                     />
-                    <div class="w-10 h-5 bg-gray-200 dark:bg-slate-600 peer-checked:bg-emerald-500 rounded-full transition-colors duration-200 peer-focus:ring-2 peer-focus:ring-emerald-500/30"></div>
+                    <div class="w-10 h-5 bg-gray-200 dark:bg-slate-600 peer-checked:bg-yellow-500 rounded-full transition-colors duration-200 peer-focus:ring-2 peer-focus:ring-yellow-500/30"></div>
                     <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"></div>
                 </div>
                 <span class="ml-3 text-sm font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors duration-200">
@@ -116,7 +116,7 @@
         <!-- Submit Button -->
         <button
             type="submit"
-            class="btn-primary w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-sm tracking-wide mt-2"
+            class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-sm tracking-wide mt-2 transition-all"
         >
             <span class="flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@
         <div class="text-center">
             <p class="text-sm text-gray-500 dark:text-gray-400">
                 Belum punya akun?
-                <a href="{{ route('register') }}" class="font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 ml-1">
+                <a href="{{ route('register') }}" class="font-bold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors duration-200 ml-1">
                     Daftar sekarang →
                 </a>
             </p>
