@@ -27,6 +27,7 @@ class DepositController extends Controller
 
         $validated['goal_id'] = $goal->id;
         $validated['recorded_by'] = Auth::id();
+        $validated['masjid_id'] = $this->getMasjidId();
 
         DB::transaction(function () use ($validated, $goal) {
             $deposit = Deposit::create($validated);
@@ -42,6 +43,20 @@ class DepositController extends Controller
 
         return redirect()->route('goals.show', $goal)
             ->with('success', 'Deposit berhasil dicatat!');
+    }
+
+    /**
+     * Get masjid_id for current user.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        return $user->masjid_id;
     }
 
     public function destroy(Deposit $deposit)

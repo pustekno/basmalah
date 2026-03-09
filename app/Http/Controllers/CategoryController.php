@@ -12,6 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
+        
         $categories = Category::with('children', 'parent')
             ->parents()
             ->orderBy('order')
@@ -38,6 +40,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Category::class);
+        
         $parentCategories = Category::parents()->active()->orderBy('name')->get();
         return view('categories.create', compact('parentCategories'));
     }
@@ -47,6 +51,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:income,expense',
@@ -57,6 +63,9 @@ class CategoryController extends Controller
             'order' => 'nullable|integer',
         ]);
 
+        // Add masjid_id
+        $validated['masjid_id'] = $this->getMasjidId();
+
         Category::create($validated);
 
         return redirect()->route('categories.index')
@@ -64,10 +73,26 @@ class CategoryController extends Controller
     }
 
     /**
+     * Get masjid_id for current user.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        return $user->masjid_id;
+    }
+
+    /**
      * Display the specified category.
      */
     public function show(Category $category)
     {
+        $this->authorize('view', $category);
+        
         $category->load('children', 'parent', 'budgets');
         
         // Get transactions for this category
@@ -84,6 +109,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $this->authorize('update', $category);
+        
         $parentCategories = Category::parents()
             ->active()
             ->where('id', '!=', $category->id)
@@ -98,6 +125,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $this->authorize('update', $category);
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:income,expense',
@@ -120,6 +149,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+        
         if ($category->hasChildren()) {
             return redirect()->route('categories.index')
                 ->with('error', 'Cannot delete category with sub-categories.');

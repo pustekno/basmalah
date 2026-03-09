@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Scopes\MasjidScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+#[ScopedBy([MasjidScope::class])]
 class Goal extends Model
 {
     protected $fillable = [
@@ -18,6 +21,7 @@ class Goal extends Model
         'status',
         'category',
         'created_by',
+        'masjid_id',
     ];
 
     protected $casts = [
@@ -30,6 +34,11 @@ class Goal extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function masjid(): BelongsTo
+    {
+        return $this->belongsTo(Masjid::class);
     }
 
     public function deposits(): HasMany

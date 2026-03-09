@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Scopes\MasjidScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Carbon\Carbon;
 
+#[ScopedBy([MasjidScope::class])]
 class Budget extends Model
 {
     use HasFactory;
@@ -19,6 +23,7 @@ class Budget extends Model
         'end_date',
         'description',
         'is_active',
+        'masjid_id',
     ];
 
     protected $casts = [
@@ -34,6 +39,14 @@ class Budget extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the masjid that owns the budget.
+     */
+    public function masjid(): BelongsTo
+    {
+        return $this->belongsTo(Masjid::class);
     }
 
     /**
