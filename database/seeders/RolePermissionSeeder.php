@@ -26,6 +26,10 @@ class RolePermissionSeeder extends Seeder
             'view accounts',
             'manage accounts',
             
+            // Categories
+            'view categories',
+            'manage categories',
+            
             // Budget
             'view budgets',
             'manage budgets',
@@ -33,6 +37,9 @@ class RolePermissionSeeder extends Seeder
             // Goals
             'view goals',
             'manage goals',
+            
+            // Calendar
+            'view calendar',
             
             // Reports
             'view reports',
@@ -57,10 +64,13 @@ class RolePermissionSeeder extends Seeder
             'delete transactions',
             'view accounts',
             'manage accounts',
+            'view categories',
+            'manage categories',
             'view budgets',
             'manage budgets',
             'view goals',
             'manage goals',
+            'view calendar',
             'view reports',
         ]);
 
@@ -80,6 +90,98 @@ class RolePermissionSeeder extends Seeder
         $firstUser = User::first();
         if ($firstUser && !$firstUser->hasAnyRole(['Super Admin', 'Admin', 'Bendahara', 'Viewer'])) {
             $firstUser->assignRole('Super Admin');
+        }
+
+        // Create test users for each role (if not exists)
+        $this->createTestUsers();
+    }
+
+    private function createTestUsers(): void
+    {
+        // Get masjids
+        $masjid1 = \App\Models\Masjid::where('name', 'Masjid Al-Ikhlas')->first();
+        $masjid2 = \App\Models\Masjid::where('name', 'Masjid An-Nur')->first();
+        $masjid3 = \App\Models\Masjid::where('name', 'Masjid At-Taqwa')->first();
+
+        // Super Admin User (no masjid - can see all)
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'superadmin@basmallah.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => bcrypt('password'),
+                'masjid_id' => null, // Super Admin tidak terikat ke masjid tertentu
+            ]
+        );
+        if (!$superAdmin->hasRole('Super Admin')) {
+            $superAdmin->assignRole('Super Admin');
+        }
+
+        // Admin User - Masjid Al-Ikhlas
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@basmallah.com'],
+            [
+                'name' => 'Admin Masjid Al-Ikhlas',
+                'password' => bcrypt('password'),
+                'masjid_id' => $masjid1?->id,
+            ]
+        );
+        if (!$admin->hasRole('Admin')) {
+            $admin->assignRole('Admin');
+        }
+
+        // Bendahara User - Masjid An-Nur
+        $bendahara = User::firstOrCreate(
+            ['email' => 'bendahara@basmallah.com'],
+            [
+                'name' => 'Bendahara Masjid An-Nur',
+                'password' => bcrypt('password'),
+                'masjid_id' => $masjid2?->id,
+            ]
+        );
+        if (!$bendahara->hasRole('Bendahara')) {
+            $bendahara->assignRole('Bendahara');
+        }
+
+        // Viewer User - No specific masjid (can see all)
+        $viewer = User::firstOrCreate(
+            ['email' => 'viewer@basmallah.com'],
+            [
+                'name' => 'Viewer Jemaah',
+                'password' => bcrypt('password'),
+                'masjid_id' => null, // Viewer tidak terikat ke masjid tertentu
+            ]
+        );
+        if (!$viewer->hasRole('Viewer')) {
+            $viewer->assignRole('Viewer');
+        }
+        // Update existing viewer to have null masjid_id
+        $viewer->update(['masjid_id' => null]);
+
+        // Additional users for each masjid
+        // Admin for Masjid An-Nur
+        $admin2 = User::firstOrCreate(
+            ['email' => 'admin.annur@basmallah.com'],
+            [
+                'name' => 'Admin Masjid An-Nur',
+                'password' => bcrypt('password'),
+                'masjid_id' => $masjid2?->id,
+            ]
+        );
+        if (!$admin2->hasRole('Admin')) {
+            $admin2->assignRole('Admin');
+        }
+
+        // Admin for Masjid At-Taqwa
+        $admin3 = User::firstOrCreate(
+            ['email' => 'admin.attaqwa@basmallah.com'],
+            [
+                'name' => 'Admin Masjid At-Taqwa',
+                'password' => bcrypt('password'),
+                'masjid_id' => $masjid3?->id,
+            ]
+        );
+        if (!$admin3->hasRole('Admin')) {
+            $admin3->assignRole('Admin');
         }
     }
 }

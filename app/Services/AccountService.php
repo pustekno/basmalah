@@ -25,11 +25,32 @@ class AccountService
      */
     public function createAccount(array $data): Account
     {
+        // Get masjid_id from authenticated user or active session
+        $masjidId = $this->getMasjidId();
+
         return Account::create([
             'name' => $data['name'],
             'type' => $data['type'],
             'balance' => $data['balance'] ?? 0,
+            'masjid_id' => $masjidId,
         ]);
+    }
+
+    /**
+     * Get masjid_id for current user.
+     * Super Admin uses active_masjid_id from session, others use their masjid_id.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        // Super Admin: use active masjid from session
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        // Other users: use their assigned masjid
+        return $user->masjid_id;
     }
 
     /**

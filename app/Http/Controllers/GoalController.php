@@ -10,6 +10,8 @@ class GoalController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Goal::class);
+        
         $goals = Goal::with('creator')
             ->withCount('deposits')
             ->withSum('deposits', 'amount')
@@ -21,11 +23,15 @@ class GoalController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Goal::class);
+        
         return view('goals.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Goal::class);
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -38,6 +44,7 @@ class GoalController extends Controller
         $validated['created_by'] = Auth::id();
         $validated['current_amount'] = 0;
         $validated['status'] = 'active';
+        $validated['masjid_id'] = $this->getMasjidId();
 
         Goal::create($validated);
 
@@ -45,8 +52,24 @@ class GoalController extends Controller
             ->with('success', 'Target berhasil dibuat!');
     }
 
+    /**
+     * Get masjid_id for current user.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        return $user->masjid_id;
+    }
+
     public function show(Goal $goal)
     {
+        $this->authorize('view', $goal);
+        
         $goal->load(['creator']);
         
         $deposits = $goal->deposits()
@@ -59,11 +82,15 @@ class GoalController extends Controller
 
     public function edit(Goal $goal)
     {
+        $this->authorize('update', $goal);
+        
         return view('goals.edit', compact('goal'));
     }
 
     public function update(Request $request, Goal $goal)
     {
+        $this->authorize('update', $goal);
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -83,6 +110,8 @@ class GoalController extends Controller
 
     public function destroy(Goal $goal)
     {
+        $this->authorize('delete', $goal);
+        
         $goal->delete();
 
         return redirect()->route('goals.index')

@@ -4,7 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Scopes\MasjidScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+#[ScopedBy([MasjidScope::class])]
 class Account extends Model
 {
     use HasFactory;
@@ -18,6 +22,7 @@ class Account extends Model
         'name',
         'type',
         'balance',
+        'masjid_id',
     ];
 
     /**
@@ -28,6 +33,14 @@ class Account extends Model
     protected $casts = [
         'balance' => 'decimal:4',
     ];
+
+    /**
+     * Get the masjid that owns the account.
+     */
+    public function masjid(): BelongsTo
+    {
+        return $this->belongsTo(Masjid::class);
+    }
 
     /**
      * Get the transactions for the account.

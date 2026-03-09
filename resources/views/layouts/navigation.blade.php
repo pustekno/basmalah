@@ -48,8 +48,11 @@
                 </div>
             </div>
 
-            <!-- Right Side: Dark Mode Toggle & Settings Dropdown -->
+            <!-- Right Side: Language Switcher, Dark Mode Toggle & Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:gap-3">
+                <!-- Language Switcher -->
+                <x-language-switcher />
+
                 <!-- Dark Mode Toggle -->
                 <button
                     @click="darkMode = !darkMode"

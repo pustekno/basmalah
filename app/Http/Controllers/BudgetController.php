@@ -14,6 +14,8 @@ class BudgetController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Budget::class);
+        
         $budgets = Budget::with('category')
             ->orderBy('start_date', 'desc')
             ->paginate(15);
@@ -35,6 +37,8 @@ class BudgetController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Budget::class);
+        
         $categories = Category::active()->orderBy('name')->get();
         return view('budgets.create', compact('categories'));
     }
@@ -44,6 +48,8 @@ class BudgetController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Budget::class);
+        
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
@@ -57,6 +63,9 @@ class BudgetController extends Controller
         // Convert amount to cents
         $validated['amount'] = $validated['amount'] * 100;
 
+        // Add masjid_id
+        $validated['masjid_id'] = $this->getMasjidId();
+
         Budget::create($validated);
 
         return redirect()->route('budgets.index')
@@ -64,10 +73,26 @@ class BudgetController extends Controller
     }
 
     /**
+     * Get masjid_id for current user.
+     */
+    private function getMasjidId(): ?int
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('Super Admin')) {
+            return session('active_masjid_id');
+        }
+
+        return $user->masjid_id;
+    }
+
+    /**
      * Display the specified budget.
      */
     public function show(Budget $budget)
     {
+        $this->authorize('view', $budget);
+        
         $budget->load('category');
 
         // Get transactions for this budget period
@@ -91,6 +116,8 @@ class BudgetController extends Controller
      */
     public function edit(Budget $budget)
     {
+        $this->authorize('update', $budget);
+        
         $categories = Category::active()->orderBy('name')->get();
         return view('budgets.edit', compact('budget', 'categories'));
     }
@@ -100,6 +127,8 @@ class BudgetController extends Controller
      */
     public function update(Request $request, Budget $budget)
     {
+        $this->authorize('update', $budget);
+        
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
@@ -125,6 +154,8 @@ class BudgetController extends Controller
      */
     public function destroy(Budget $budget)
     {
+        $this->authorize('delete', $budget);
+        
         $budget->delete();
 
         return redirect()->route('budgets.index')

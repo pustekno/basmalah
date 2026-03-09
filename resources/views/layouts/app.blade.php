@@ -120,6 +120,60 @@
 
                             <!-- Right Side Actions -->
                             <div class="flex items-center gap-4">
+                                <!-- Language Switcher -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 uppercase">{{ app()->getLocale() }}</span>
+                                    </button>
+
+                                    <div x-show="open" 
+                                         @click.away="open = false"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="transform opacity-0 scale-95"
+                                         x-transition:enter-end="transform opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75"
+                                         x-transition:leave-start="transform opacity-100 scale-100"
+                                         x-transition:leave-end="transform opacity-0 scale-95"
+                                         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-slate-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                         style="display: none;">
+                                        
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="id">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'id' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇮🇩 Indonesia
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="en">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'en' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇬🇧 English
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="es">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'es' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇪🇸 Español
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('language.switch') }}">
+                                            @csrf
+                                            <input type="hidden" name="locale" value="tr">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 {{ app()->getLocale() == 'tr' ? 'bg-gray-50 dark:bg-slate-700 font-semibold' : '' }}">
+                                                🇹🇷 Türkçe
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
                                 <!-- Dark Mode Toggle -->
                                 <button @click="darkMode = !darkMode" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
                                     <svg x-show="!darkMode" class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
