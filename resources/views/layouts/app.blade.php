@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarOpen: true, sidebarCollapsed: false }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -176,7 +176,7 @@
             @include('layouts.sidebar')
 
             <!-- Main Content Area -->
-            <div class="lg:ml-64 flex-1 flex flex-col">
+            <main class="flex-1 flex flex-col transition-all duration-300" :class="sidebarOpen ? (sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64') : 'lg:ml-0'">
                 <!-- Top Bar -->
                 <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
                     <div class="px-4 sm:px-6 lg:px-8 py-3">
@@ -286,7 +286,7 @@
                         </div>
                     </div>
                 </footer>
-            </div>
+            </main>
         </div>
     </body>
 </html>

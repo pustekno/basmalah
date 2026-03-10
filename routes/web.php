@@ -126,9 +126,13 @@ Route::middleware(['auth', 'role:Super Admin|Admin'])->prefix('admin')->name('ad
     // User Management - Super Admin Only
     Route::middleware('role:Super Admin')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assign-role');
         Route::delete('/users/{user}/remove-role', [UserController::class, 'removeRole'])->name('users.remove-role');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 });
 

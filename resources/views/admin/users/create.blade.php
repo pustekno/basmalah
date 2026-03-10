@@ -9,9 +9,9 @@
                 </a>
                 <div>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        Edit User
+                        Create New User
                     </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Manage user details and roles</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Add a new user to the system</p>
                 </div>
             </div>
         </div>
@@ -20,27 +20,23 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                <!-- User Info -->
-                <div class="px-6 py-5 border-b border-gray-100 dark:border-slate-700">
-                    <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center text-yellow-600 dark:text-yellow-400 text-xl font-bold">
-                            {{ substr($user->name, 0, 1) }}
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $user->name }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ route('admin.users.update', $user) }}" class="p-6" x-data="{ 
-                    selectedRoles: {{ json_encode($user->getRoleNames()->toArray()) }},
-                    selectedMasjid: @json($user->masjid_id ? $masjids->find($user->masjid_id)?->name : null),
-                    selectedMasjidId: @json($user->masjid_id ? (int)$user->masjid_id : null),
+                <form method="POST" action="{{ route('admin.users.store') }}" class="p-6" x-data="{ 
+                    selectedRoles: {{ json_encode(old('roles', [])) }},
+                    toggleRole(role, isChecked) {
+                        if (isChecked) {
+                            if (!this.selectedRoles.includes(role)) {
+                                this.selectedRoles.push(role);
+                            }
+                        } else {
+                            this.selectedRoles = this.selectedRoles.filter(r => r !== role);
+                        }
+                    },
+                    selectedMasjid: @json(old('masjid_id') ? ($masjids->find(old('masjid_id'))?->name ?? '') : null),
+                    selectedMasjidId: @json(old('masjid_id') ? (int)old('masjid_id') : null),
                     openMasjid: false,
                     masjids: {{ $masjids->toJson() }},
                     needsMasjid() {
-                        return this.selectedRoles.includes('Admin') || this.selectedRoles.includes('Bendahara');
+                        return this.selectedRoles.length > 0 && (this.selectedRoles.includes('Admin') || this.selectedRoles.includes('Bendahara'));
                     },
                     selectMasjid(id, name) {
                         this.selectedMasjid = name;
@@ -55,7 +51,6 @@
                     }
                 }">
                     @csrf
-                    @method('PUT')
                     
                     <!-- Name -->
                     <div class="mb-6">
@@ -66,9 +61,10 @@
                             type="text" 
                             name="name" 
                             id="name" 
-                            value="{{ old('name', $user->name) }}"
+                            value="{{ old('name') }}"
                             required
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                            placeholder="Enter full name"
                         >
                         @error('name')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -84,13 +80,47 @@
                             type="email" 
                             name="email" 
                             id="email" 
-                            value="{{ old('email', $user->email) }}"
+                            value="{{ old('email') }}"
                             required
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                            placeholder="Enter email address"
                         >
                         @error('email')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Password
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                            placeholder="Minimum 8 characters"
+                        >
+                        @error('password')
+                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-6">
+                        <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Confirm Password
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password_confirmation" 
+                            id="password_confirmation" 
+                            required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                            placeholder="Confirm password"
+                        >
                     </div>
 
                     <!-- Assign Roles -->
@@ -141,7 +171,7 @@
                         
                         <!-- Custom Dropdown -->
                         <div class="relative">
-                            <input type="hidden" name="masjid_id" id="masjid_id" value="{{ old('masjid_id', $user->masjid_id) }}">
+                            <input type="hidden" name="masjid_id" id="masjid_id" value="{{ old('masjid_id') }}">
                             
                             <!-- Dropdown Trigger -->
                             <button 
@@ -194,7 +224,7 @@
                                     @foreach($masjids as $masjid)
                                         <button 
                                             type="button"
-                                            onclick="document.getElementById('masjid_id').value = {{ $masjid->id }}; document.querySelector('[x-data]').__x.$data.selectedMasjid = '{{ addslashes($masjid->name) }}'; document.querySelector('[x-data]').__x.$data.selectedMasjidId = {{ $masjid->id }}; document.querySelector('[x-data]').__x.$data.openMasjid = false"
+                                            @click="selectMasjid({{ $masjid->id }}, '{{ addslashes($masjid->name) }}')"
                                             class="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors duration-150 border-b border-gray-100 dark:border-slate-700 last:border-b-0"
                                             :class="{'bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-l-yellow-500': selectedMasjidId == {{ $masjid->id }} }"
                                         >
@@ -218,7 +248,7 @@
 
                     <div class="flex gap-3">
                         <button type="submit" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200">
-                            Update User
+                            Create User
                         </button>
                         <a href="{{ route('admin.users.index') }}" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-6 rounded-xl transition-all duration-200 text-center">
                             Cancel

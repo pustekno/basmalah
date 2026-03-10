@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -66,6 +67,9 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
         ]);
+
+        // Fire the Registered event to trigger AssignDefaultRole listener
+        event(new Registered($user));
 
         Auth::login($user);
 
