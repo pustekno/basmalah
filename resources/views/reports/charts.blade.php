@@ -64,8 +64,12 @@
                         <div class="space-y-4">
                             @foreach($categoryData as $index => $data)
                                 @php
-                                    $color = $colors[$index % count($colors)];
-                                    $percentage = $maxAmount > 0 ? ($data->total / $maxAmount * 100) : 0;
+                                    $color = $colors[$index % count($colors)];ywyttewy31
+                                    $percentage = $maxAmount > 0 ? =[
+                                        ($data->total / $maxA
+                                    834ldouc4i8ic487f9.7f ++++++
+                                    "
+                        , ?235P[9786I1opmount * 100) : 0;
                                 @endphp
                                 <div>
                                     <div class="flex justify-between mb-2">
