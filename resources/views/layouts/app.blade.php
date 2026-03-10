@@ -176,7 +176,7 @@
             @include('layouts.sidebar')
 
             <!-- Main Content Area -->
-            <main class="flex-1 flex flex-col transition-all duration-300" :class="sidebarOpen ? (sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64') : 'lg:ml-0'">
+            <main class="flex-1 flex flex-col transition-all duration-300" :class="sidebarOpen ? (sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64') : 'lg:ml-0'">
                 <!-- Top Bar -->
                 <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
                     <div class="px-4 sm:px-6 lg:px-8 py-3">
