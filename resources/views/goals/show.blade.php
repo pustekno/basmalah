@@ -59,18 +59,29 @@
                         <p class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($goal->remaining_amount, 0, ',', '.') }}</p>
                     </div>
                     <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-4 text-center">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Progress</p>
-                        <p class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($goal->progress_percentage, 1) }}%</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Progress Deposit</p>
+                        <p class="text-xl font-bold text-gray-900 dark:text-white">{{ $goal->target_amount > 0 ? number_format(min(($goal->current_amount / $goal->target_amount) * 100, 100), 1) : 0 }}%</p>
                     </div>
+                    <div class="col-span-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Progress Pengerjaan</p>
+                        <p class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($goal->progress_percentage ?? 0, 1) }}%</p>
                 </div>
 
                 <div class="mb-6">
                     <div class="flex justify-between text-sm mb-2">
-                        <span class="font-medium text-gray-700 dark:text-gray-300">Progress Pencapaian</span>
-                        <span class="font-bold text-gray-900 dark:text-white">{{ number_format($goal->progress_percentage, 1) }}%</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-300">Progress Deposit</span>
+                        <span class="font-bold text-gray-900 dark:text-white">{{ $goal->target_amount > 0 ? number_format(min(($goal->current_amount / $goal->target_amount) * 100, 100), 1) : 0 }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3 mb-4">
+                        <div class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: {{ $goal->target_amount > 0 ? min(($goal->current_amount / $goal->target_amount) * 100, 100) : 0 }}%"></div>
+                    </div>
+
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">Progress Pengerjaan</span>
+                        <span class="font-bold text-gray-900 dark:text-white">{{ number_format($goal->progress_percentage ?? 0, 1) }}%</span>
                     </div>
                     <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3">
-                        <div class="bg-yellow-500 h-3 rounded-full transition-all duration-500" style="width: {{ min($goal->progress_percentage, 100) }}%"></div>
+                        <div class="bg-blue-500 h-3 rounded-full transition-all duration-500" style="width: {{ min($goal->progress_percentage ?? 0, 100) }}%"></div>
                     </div>
                     <div class="flex justify-between text-xs mt-2 text-gray-500 dark:text-gray-400">
                         <span>Rp {{ number_format($goal->current_amount, 0, ',', '.') }}</span>

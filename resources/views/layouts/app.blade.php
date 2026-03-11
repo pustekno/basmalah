@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarOpen: true, sidebarCollapsed: false }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarOpen: true }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -176,11 +176,22 @@
             @include('layouts.sidebar')
 
             <!-- Main Content Area -->
-            <main class="flex-1 flex flex-col transition-all duration-300" :class="sidebarOpen ? (sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64') : 'lg:ml-0'">
+            <main class="flex-1 flex flex-col transition-all duration-300" :class="sidebarOpen ? 'lg:ml-64' : ''">
                 <!-- Top Bar -->
                 <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
                     <div class="px-4 sm:px-6 lg:px-8 py-3">
                         <div class="flex items-center justify-between gap-4">
+                            <!-- Sidebar Toggle Button (visible when sidebar is hidden) -->
+                            <button @click="sidebarOpen = !sidebarOpen" 
+                                x-show="!sidebarOpen"
+                                x-transition
+                                class="p-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow-md transition-all duration-300"
+                                title="Buka Sidebar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                                </svg>
+                            </button>
+                            
                             <!-- Left Section - Title & Actions -->
                             @isset($header)
                                 <div class="flex items-center gap-6 flex-1">

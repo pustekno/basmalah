@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Category;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -161,5 +162,57 @@ class BudgetController extends Controller
 
         return redirect()->route('budgets.index')
             ->with('success', 'Budget deleted successfully.');
+    }
+
+    /**
+     * Show form to allocate funds to budget.
+     */
+    public function allocateForm(Budget $budget)
+    {
+        $this->authorize('update', $budget);
+        
+        $accounts = Account::orderBy('name')->get();
+        return view('budgets.allocate', compact('budget', 'accounts'));
+    }
+
+    /**
+     * Store budget allocation.
+     */
+    public function allocate(Request $request, Budget $budget)
+    {
+        $this->authorize('update', $budget);
+        
+        $validated = $request->validate([
+            'account_id' => 'required|exists:accounts,id',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        // Amount is already in rupiah (no need to convert to cents)
+        // Just remove any formatting characters that might be present
+        $amountString = $validated['amount'] ?? '0';
+        $validated['amount'] = (int) preg_replace('/\D/', '', strval($amountString));
+
+        if ($validated['amount'] <= 0) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Amount must be greater than 0');
+        }
+
+        try {
+            $budget->allocateFunds(
+                $validated['account_id'],
+                $validated['amount'],
+                $validated['description'],
+                auth()->id()
+            );
+
+            return redirect()->route('budgets.show', $budget)
+                ->with('success', '✓ Funds allocated successfully. Account balance has been reduced.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error allocating funds: ' . $e->getMessage());
+        }
     }
 }

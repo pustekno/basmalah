@@ -173,6 +173,43 @@
                                             budget: item.budget
                                         }
                                     });
+                                } else if (item.type === 'goal_start') {
+                                    events.push({
+                                        title: `🎯 ${item.goal.name} Start`,
+                                        start: item.date,
+                                        backgroundColor: '#8b5cf6',
+                                        borderColor: '#7c3aed',
+                                        textColor: '#ffffff',
+                                        extendedProps: {
+                                            type: 'goal_start',
+                                            goal: item.goal
+                                        }
+                                    });
+                                } else if (item.type === 'goal_end') {
+                                    const goalStatusColor = item.goal.status === 'completed' ? '#10b981' : (item.goal.status === 'active' ? '#f59e0b' : '#6b7280');
+                                    events.push({
+                                        title: `🏁 ${item.goal.name} End (${item.goal.progress_percentage}%)`,
+                                        start: item.date,
+                                        backgroundColor: goalStatusColor,
+                                        borderColor: item.goal.status === 'completed' ? '#059669' : (item.goal.status === 'active' ? '#d97706' : '#4b5563'),
+                                        textColor: '#ffffff',
+                                        extendedProps: {
+                                            type: 'goal_end',
+                                            goal: item.goal
+                                        }
+                                    });
+                                } else if (item.type === 'goal_deposit') {
+                                    events.push({
+                                        title: `💰 Deposit: ${item.deposit.goal_name}`,
+                                        start: item.date,
+                                        backgroundColor: '#22c55e',
+                                        borderColor: '#16a34a',
+                                        textColor: '#ffffff',
+                                        extendedProps: {
+                                            type: 'goal_deposit',
+                                            deposit: item.deposit
+                                        }
+                                    });
                                 }
                             });
                             
@@ -288,6 +325,170 @@
                                     <div class="mt-6 flex gap-3">
                                         <a href="/budgets/${budget.id}" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
                                             View Details
+                                        </a>
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        modal.addEventListener('click', (e) => e.target === modal && modal.remove());
+                        return;
+                    }
+                    
+                    if (props.type === 'goal_start') {
+                        const goal = props.goal;
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
+                        modal.innerHTML = `
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700">
+                                <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-purple-600 rounded-xl">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Goal Started</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">${info.event.startStr}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Goal Name</p>
+                                            <p class="text-lg font-semibold text-gray-900 dark:text-white">${goal.name}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Target Amount</p>
+                                            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">Rp ${new Intl.NumberFormat('id-ID').format(goal.target_amount)}</p>
+                                        </div>
+                                        ${goal.category ? `<div><p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Category</p><p class="text-sm font-medium text-gray-900 dark:text-white">${goal.category}</p></div>` : ''}
+                                    </div>
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="/goals/${goal.id}/edit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
+                                            View Details
+                                        </a>
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        modal.addEventListener('click', (e) => e.target === modal && modal.remove());
+                        return;
+                    }
+                    
+                    if (props.type === 'goal_end') {
+                        const goal = props.goal;
+                        const statusColor = goal.status === 'completed' ? 'green' : (goal.status === 'active' ? 'yellow' : 'gray');
+                        const statusText = goal.status === 'completed' ? 'Completed' : (goal.status === 'active' ? 'Active' : 'Cancelled');
+                        
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
+                        modal.innerHTML = `
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700">
+                                <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-${statusColor}-500 rounded-xl">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Goal Ended</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">${info.event.startStr}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="mb-6">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
+                                            <span class="px-3 py-1 rounded-full text-sm font-medium bg-${statusColor}-100 text-${statusColor}-700 dark:bg-${statusColor}-900/60 dark:text-${statusColor}-300">
+                                                ${statusText}
+                                            </span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3 mb-2">
+                                            <div class="h-3 rounded-full bg-purple-500" style="width: ${Math.min(goal.progress_percentage, 100)}%"></div>
+                                        </div>
+                                        <p class="text-right text-sm font-bold text-gray-900 dark:text-white">${goal.progress_percentage}%</p>
+                                    </div>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Goal Name</p>
+                                            <p class="text-lg font-semibold text-gray-900 dark:text-white">${goal.name}</p>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Target</p>
+                                                <p class="text-lg font-bold text-gray-900 dark:text-white">Rp ${new Intl.NumberFormat('id-ID').format(goal.target_amount)}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Collected</p>
+                                                <p class="text-lg font-bold text-gray-900 dark:text-white">Rp ${new Intl.NumberFormat('id-ID').format(goal.current_amount)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="/goals/${goal.id}/edit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
+                                            View Details
+                                        </a>
+                                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        modal.addEventListener('click', (e) => e.target === modal && modal.remove());
+                        return;
+                    }
+                    
+                    if (props.type === 'goal_deposit') {
+                        const deposit = props.deposit;
+                        const modal = document.createElement('div');
+                        modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4';
+                        modal.innerHTML = `
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700">
+                                <div class="p-6 border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-green-500 rounded-xl">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Deposit Received</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">${info.event.startStr}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Goal</p>
+                                            <p class="text-lg font-semibold text-gray-900 dark:text-white">${deposit.goal_name}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Amount</p>
+                                            <p class="text-2xl font-bold text-green-600 dark:text-green-400">+Rp ${new Intl.NumberFormat('id-ID').format(deposit.amount)}</p>
+                                        </div>
+                                        ${deposit.donor_name ? `<div><p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Donor</p><p class="text-sm font-medium text-gray-900 dark:text-white">${deposit.donor_name}</p></div>` : ''}
+                                        ${deposit.notes ? `<div><p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Notes</p><p class="text-sm text-gray-600 dark:text-gray-400">${deposit.notes}</p></div>` : ''}
+                                    </div>
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="/goals" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-xl text-center transition">
+                                            View Goals
                                         </a>
                                         <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-4 rounded-xl transition">
                                             Close

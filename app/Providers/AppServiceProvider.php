@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Listeners\AssignDefaultRole;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use App\Models\Transaction;
 use App\Models\Account;
 use App\Models\Category;
@@ -55,5 +56,14 @@ class AppServiceProvider extends ServiceProvider
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
+
+        // Custom Blade directive for impersonation check
+        Blade::if('impersonating', function () {
+            return session('is_impersonating') === true;
+        });
+
+        Blade::if('notImpersonating', function () {
+            return session('is_impersonating') !== true;
+        });
     }
 }

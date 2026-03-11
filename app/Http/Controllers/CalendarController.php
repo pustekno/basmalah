@@ -117,6 +117,66 @@ class CalendarController extends Controller
             ];
         }
 
+        // Add goal events (start date, end date, and deposits)
+        $goals = \App\Models\Goal::where(function($query) use ($startDate, $endDate) {
+                $query->whereBetween('start_date', [$startDate, $endDate])
+                      ->orWhereBetween('end_date', [$startDate, $endDate])
+                      ->orWhere(function($q) use ($startDate, $endDate) {
+                          $q->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                      });
+            })
+            ->with('deposits')
+            ->get();
+
+        foreach ($goals as $goal) {
+            // Goal start event
+            $events[] = [
+                'type' => 'goal_start',
+                'date' => $goal->start_date->format('Y-m-d'),
+                'goal' => [
+                    'id' => $goal->id,
+                    'name' => $goal->title,
+                    'target_amount' => $goal->target_amount,
+                    'current_amount' => $goal->current_amount,
+                    'progress_percentage' => $goal->progress_percentage,
+                    'status' => $goal->status,
+                    'category' => $goal->category,
+                ],
+            ];
+
+            // Goal end event
+            $events[] = [
+                'type' => 'goal_end',
+                'date' => $goal->end_date->format('Y-m-d'),
+                'goal' => [
+                    'id' => $goal->id,
+                    'name' => $goal->title,
+                    'target_amount' => $goal->target_amount,
+                    'current_amount' => $goal->current_amount,
+                    'progress_percentage' => $goal->progress_percentage,
+                    'status' => $goal->status,
+                    'category' => $goal->category,
+                ],
+            ];
+
+            // Deposit events for this goal
+            foreach ($goal->deposits as $deposit) {
+                $events[] = [
+                    'type' => 'goal_deposit',
+                    'date' => $deposit->deposit_date->format('Y-m-d'),
+                    'deposit' => [
+                        'id' => $deposit->id,
+                        'goal_id' => $goal->id,
+                        'goal_name' => $goal->title,
+                        'amount' => $deposit->amount,
+                        'donor_name' => $deposit->donor_name,
+                        'notes' => $deposit->notes,
+                    ],
+                ];
+            }
+        }
+
         return response()->json($events);
     }
 }

@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MasjidSeeder::class,
             RolePermissionSeeder::class,
+            CategorySeeder::class,
+            AccountTransactionSeeder::class,
+            BudgetSeeder::class,
         ]);
     }
 }

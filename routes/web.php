@@ -20,6 +20,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Impersonation Routes (Super Admin only - protected in controller)
+Route::middleware(['auth', 'role:Super Admin'])->group(function () {
+    Route::post('/admin/users/{user}/login-as', [UserController::class, 'loginAs'])->name('admin.users.login-as');
+    Route::post('/admin/users/back-to-admin', [UserController::class, 'backToAdmin'])->name('admin.users.back-to-admin');
+});
+
 // Language Switcher
 Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
 
@@ -67,7 +73,9 @@ Route::middleware('auth')->group(function () {
         Route::get('budgets/create', [BudgetController::class, 'create'])->name('budgets.create');
         Route::post('budgets', [BudgetController::class, 'store'])->name('budgets.store');
         Route::get('budgets/{budget}/edit', [BudgetController::class, 'edit'])->name('budgets.edit');
-        Route::patch('budgets/{budget}', [BudgetController::class, 'update'])->name('budgets.update');
+        Route::get('budgets/{budget}/allocate', [BudgetController::class, 'allocateForm'])->name('budgets.allocate');
+        Route::post('budgets/{budget}/allocate', [BudgetController::class, 'allocate'])->name('budgets.store-allocate');
+        Route::match(['patch', 'put'], 'budgets/{budget}', [BudgetController::class, 'update'])->name('budgets.update');
         Route::delete('budgets/{budget}', [BudgetController::class, 'destroy'])->name('budgets.destroy');
     });
     Route::middleware('permission:view budgets')->group(function () {
@@ -98,8 +106,10 @@ Route::middleware('auth')->group(function () {
         Route::post('goals', [GoalController::class, 'store'])->name('goals.store');
         Route::get('goals/{goal}/edit', [GoalController::class, 'edit'])->name('goals.edit');
         Route::patch('goals/{goal}', [GoalController::class, 'update'])->name('goals.update');
+        Route::patch('goals/{goal}/progress', [GoalController::class, 'updateProgress'])->name('goals.updateProgress');
         Route::delete('goals/{goal}', [GoalController::class, 'destroy'])->name('goals.destroy');
-        Route::post('goals/{goal}/deposits', [DepositController::class, 'store'])->name('goals.deposits.store');
+        Route::post('goals/{goal}/deposits', [DepositController::class, 'store'])->name('deposits.store');
+        Route::delete('deposits/{deposit}', [DepositController::class, 'destroy'])->name('deposits.destroy');
     });
     Route::middleware('permission:view goals')->group(function () {
         Route::get('goals', [GoalController::class, 'index'])->name('goals.index');
@@ -115,6 +125,9 @@ Route::middleware('auth')->group(function () {
     // Reports - Protected by permissions
     Route::middleware('permission:view reports')->group(function () {
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/income-vs-expense', [ReportController::class, 'incomeVsExpense'])->name('reports.income-vs-expense');
+        Route::get('reports/by-category', [ReportController::class, 'byCategory'])->name('reports.by-category');
+        Route::get('reports/by-account', [ReportController::class, 'byAccount'])->name('reports.by-account');
         Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
     });
 });

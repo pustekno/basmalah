@@ -70,7 +70,8 @@
                             @endphp
                             @foreach($categoryData as $data)
                                 @php
-                                    $percentage = $totalAmount > 0 ? ($data->total / $totalAmount * 100) : 0;
+                                    $color = $colors[$index % count($colors)];
+                                    $percentage = $maxAmount > 0 ? ($data->total / $maxAmount * 100) : 0;
                                 @endphp
                                 <div>
                                     <div class="flex justify-between text-sm mb-2">

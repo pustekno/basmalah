@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Scopes\MasjidScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Carbon\Carbon;
+use Exception;
 
 #[ScopedBy([MasjidScope::class])]
 class Budget extends Model
@@ -50,14 +51,57 @@ class Budget extends Model
     }
 
     /**
+     * Get allocations for this budget.
+     */
+    public function allocations()
+    {
+        return $this->hasMany(BudgetAllocation::class);
+    }
+
+    /**
      * Get total spent for this budget.
      */
     public function getTotalSpentAttribute()
     {
-        return Transaction::where('category', $this->category->name)
-            ->where('type', 'expense')
-            ->whereBetween('transaction_date', [$this->start_date, $this->end_date])
-            ->sum('amount');
+        return $this->allocations()->sum('amount');
+    }
+
+    /**
+     * Allocate funds to this budget from an account.
+     */
+    public function allocateFunds($accountId, $amount, $description = null, $userId = null)
+    {
+        // Get account and verify it has enough balance
+        $account = Account::find($accountId);
+        if (!$account || $account->balance < $amount) {
+            throw new Exception('Insufficient account balance');
+        }
+
+        // Create allocation record
+        $allocation = $this->allocations()->create([
+            'budget_id' => $this->id,
+            'account_id' => $accountId,
+            'amount' => $amount,
+            'description' => $description,
+            'created_by' => $userId ?: auth()->id(),
+            'allocated_at' => now(),
+        ]);
+
+        // Create transaction to record this expense
+        Transaction::create([
+            'account_id' => $accountId,
+            'type' => 'expense',
+            'category' => $this->category->name,
+            'description' => 'Alokasi ke anggaran: ' . $this->name . ($description ? ' - ' . $description : ''),
+            'amount' => $amount,
+            'transaction_date' => now(),
+            'masjid_id' => $this->masjid_id,
+        ]);
+
+        // Decrease account balance
+        $account->decrement('balance', $amount);
+
+        return $allocation;
     }
 
     /**

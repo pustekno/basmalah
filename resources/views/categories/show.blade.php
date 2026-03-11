@@ -24,7 +24,12 @@ git push origin azril<x-app-layout>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Category Name</h3>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $category->name }}</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center">
+                                    {!! \App\Helpers\IconHelper::render($category->icon_name ?? 'tag', 'w-6 h-6 text-yellow-600 dark:text-yellow-500') !!}
+                                </div>
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $category->name }}</p>
+                            </div>
                         </div>
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Type</h3>
@@ -35,16 +40,14 @@ git push origin azril<x-app-layout>
                         @if($category->parent)
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Parent Category</h3>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $category->parent->name }}</p>
-                        </div>
-                        @endif
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Color</h3>
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-lg" style="background-color: {{ $category->color }}"></div>
-                                <span class="text-gray-900 dark:text-white">{{ $category->color }}</span>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                                    {!! \App\Helpers\IconHelper::render($category->parent->icon_name ?? 'tag', 'w-5 h-5 text-gray-600 dark:text-gray-400') !!}
+                                </div>
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $category->parent->name }}</p>
                             </div>
                         </div>
+                        @endif
                         @if($category->description)
                         <div class="md:col-span-2">
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Description</h3>
@@ -59,21 +62,23 @@ git push origin azril<x-app-layout>
             @if($category->children->count() > 0)
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sub-categories</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sub-categories:</h3>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         @foreach($category->children as $child)
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <div class="w-8 h-8 rounded-lg" style="background-color: {{ $child->color }}20">
-                                        <div class="w-full h-full rounded-lg" style="background-color: {{ $child->color }}"></div>
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-yellow-400 dark:hover:border-yellow-500 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center flex-shrink-0">
+                                        {!! \App\Helpers\IconHelper::render($child->icon_name ?? 'tag', 'w-5 h-5 text-yellow-600 dark:text-yellow-500') !!}
                                     </div>
-                                    <h4 class="font-semibold text-gray-900 dark:text-white">{{ $child->name }}</h4>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-semibold text-gray-900 dark:text-white truncate">{{ $child->name }}</h4>
+                                        @if($child->description)
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ $child->description }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-                                @if($child->description)
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $child->description }}</p>
-                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -137,7 +142,7 @@ git push origin azril<x-app-layout>
                                         {{ $transaction->account->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold {{ $transaction->type == 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                                        {{ $transaction->type == 'income' ? '+' : '-' }} Rp {{ number_format($transaction->amount, 0, ',', '.') }}
+                                        {{ $transaction->type == 'income' ? '+' : '-' }} Rp {{ number_format($transaction->amount / 100, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @empty

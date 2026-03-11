@@ -17,7 +17,7 @@
                 <div class="p-8">
                     <form action="{{ route('budgets.update', $budget) }}" method="POST" class="space-y-6">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
 
                         <!-- Category -->
                         <div>

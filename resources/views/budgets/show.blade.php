@@ -4,6 +4,9 @@
             {{ $budget->name }}
         </h2>
         <div class="flex gap-2">
+            <a href="{{ route('budgets.allocate', $budget) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-xl font-medium text-sm text-white hover:bg-green-700 transition-colors">
+                Allocate Funds
+            </a>
             <a href="{{ route('budgets.edit', $budget) }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-xl font-medium text-sm text-white hover:bg-yellow-700 transition-colors">
                 Edit
             </a>
@@ -93,6 +96,53 @@
                 </div>
             </div>
 
+            <!-- Allocations -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Budget Allocations</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-100 dark:divide-slate-700">
+                        <thead class="bg-gray-50 dark:bg-slate-700/50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Account</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Description</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Allocated By</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                            @forelse($budget->allocations as $allocation)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $allocation->allocated_at?->format('d M Y H:i') ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $allocation->account->name }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $allocation->description ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-right text-gray-700 dark:text-gray-200">
+                                        Rp {{ number_format($allocation->amount, 0, ',', '.') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $allocation->createdBy->name ?? 'System' }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                                        No allocations yet. <a href="{{ route('budgets.allocate', $budget) }}" class="text-blue-600 hover:text-blue-700 dark:text-blue-400">Allocate funds</a>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Transactions -->
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
@@ -121,7 +171,7 @@
                                         {{ $transaction->account->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                        - Rp {{ number_format($transaction->amount, 0, ',', '.') }}
+                                        - Rp {{ number_format($transaction->amount / 100, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @empty

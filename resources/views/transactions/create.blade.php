@@ -81,9 +81,9 @@
                             }
                         }
                         
-                        // Convert to number
+                        // Convert to number and multiply by 100 for cents storage
                         let numValue = parseInt(value) || 0;
-                        this.amount = numValue;
+                        this.amount = numValue * 100;
                         
                         // Format display with Indonesian format
                         if (numValue > 0) {
