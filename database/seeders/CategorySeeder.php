@@ -17,6 +17,7 @@ class CategorySeeder extends Seeder
             'name' => 'Zakat',
             'type' => 'income',
             'description' => 'Zakat dari jamaah',
+            'icon_name' => 'heart',
             'color' => '#10B981',
             'order' => 1,
         ]);
@@ -25,6 +26,7 @@ class CategorySeeder extends Seeder
             'name' => 'Infaq',
             'type' => 'income',
             'description' => 'Infaq dan sedekah',
+            'icon_name' => 'gift',
             'color' => '#3B82F6',
             'order' => 2,
         ]);
@@ -33,6 +35,7 @@ class CategorySeeder extends Seeder
             'name' => 'Sedekah',
             'type' => 'income',
             'description' => 'Sedekah dari jamaah',
+            'icon_name' => 'hand',
             'color' => '#8B5CF6',
             'order' => 3,
         ]);
@@ -41,6 +44,7 @@ class CategorySeeder extends Seeder
             'name' => 'Donasi',
             'type' => 'income',
             'description' => 'Donasi untuk pembangunan dan program masjid',
+            'icon_name' => 'star',
             'color' => '#F59E0B',
             'order' => 4,
         ]);
@@ -50,6 +54,7 @@ class CategorySeeder extends Seeder
             'name' => 'Operasional',
             'type' => 'expense',
             'description' => 'Biaya operasional masjid',
+            'icon_name' => 'briefcase',
             'color' => '#EF4444',
             'order' => 1,
         ]);
@@ -60,6 +65,7 @@ class CategorySeeder extends Seeder
             'type' => 'expense',
             'parent_id' => $operasionalCategory->id,
             'description' => 'Biaya listrik dan air',
+            'icon_name' => 'lightning-bolt',
             'color' => '#EF4444',
             'order' => 1,
         ]);
@@ -69,6 +75,7 @@ class CategorySeeder extends Seeder
             'type' => 'expense',
             'parent_id' => $operasionalCategory->id,
             'description' => 'Biaya kebersihan dan perawatan',
+            'icon_name' => 'fire',
             'color' => '#EF4444',
             'order' => 2,
         ]);
@@ -77,6 +84,7 @@ class CategorySeeder extends Seeder
             'name' => 'Perlengkapan',
             'type' => 'expense',
             'description' => 'Pembelian perlengkapan masjid',
+            'icon_name' => 'shopping-cart',
             'color' => '#F97316',
             'order' => 2,
         ]);
@@ -85,6 +93,7 @@ class CategorySeeder extends Seeder
             'name' => 'Pengajian',
             'type' => 'expense',
             'description' => 'Biaya pengajian dan kajian',
+            'icon_name' => 'book-open',
             'color' => '#06B6D4',
             'order' => 3,
         ]);
@@ -93,6 +102,7 @@ class CategorySeeder extends Seeder
             'name' => 'Santunan',
             'type' => 'expense',
             'description' => 'Santunan untuk anak yatim dan dhuafa',
+            'icon_name' => 'users',
             'color' => '#8B5CF6',
             'order' => 4,
         ]);
@@ -101,6 +111,7 @@ class CategorySeeder extends Seeder
             'name' => 'Pembangunan',
             'type' => 'expense',
             'description' => 'Biaya pembangunan dan renovasi',
+            'icon_name' => 'office-building',
             'color' => '#EC4899',
             'order' => 5,
         ]);

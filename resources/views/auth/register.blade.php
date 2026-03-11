@@ -2,8 +2,8 @@
     <!-- Page header -->
     <div class="mb-7 fade-in-up">
         <div class="flex items-center gap-2 mb-3">
-            <div class="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>
-            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Buat Akun</span>
+            <div class="w-1 h-6 bg-yellow-600 rounded-full"></div>
+            <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-widest">Buat Akun</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-2">
             Daftar Akun Baru ✨
@@ -33,11 +33,11 @@
                 return labels[this.strength] || '';
             },
             get strengthColor() {
-                const colors = ['', 'bg-red-400', 'bg-yellow-400', 'bg-emerald-400', 'bg-emerald-600'];
+                const colors = ['', 'bg-red-400', 'bg-yellow-400', 'bg-yellow-500', 'bg-yellow-600'];
                 return colors[this.strength] || '';
             },
             get strengthTextColor() {
-                const colors = ['', 'text-red-500', 'text-yellow-600', 'text-emerald-600', 'text-emerald-700'];
+                const colors = ['', 'text-red-500', 'text-yellow-600', 'text-yellow-600', 'text-yellow-700'];
                 return colors[this.strength] || '';
             },
             showPass: false,
@@ -53,7 +53,7 @@
             </label>
             <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
                 </div>
@@ -66,7 +66,7 @@
                     autofocus
                     autocomplete="name"
                     placeholder="Masukkan nama lengkap Anda"
-                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('name') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('name') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
             </div>
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -79,7 +79,7 @@
             </label>
             <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
@@ -91,7 +91,7 @@
                     required
                     autocomplete="username"
                     placeholder="nama@email.com"
-                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('email') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('email') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -104,7 +104,7 @@
             </label>
             <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                 </div>
@@ -116,12 +116,12 @@
                     autocomplete="new-password"
                     placeholder="Minimal 8 karakter"
                     x-model="password"
-                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('password') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('password') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
                 <button
                     type="button"
                     @click="showPass = !showPass"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 z-10"
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors duration-200 z-10"
                 >
                     <svg x-show="!showPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -159,7 +159,7 @@
             </label>
             <div class="relative group">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
                 </div>
@@ -170,12 +170,12 @@
                     required
                     autocomplete="new-password"
                     placeholder="Ulangi password Anda"
-                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 dark:focus:border-emerald-400 input-glow transition-all duration-200 @error('password_confirmation') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
+                    class="block w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 dark:focus:border-yellow-400 input-glow transition-all duration-200 @error('password_confirmation') border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 @enderror"
                 />
                 <button
                     type="button"
                     @click="showConfirm = !showConfirm"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 z-10"
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors duration-200 z-10"
                 >
                     <svg x-show="!showConfirm" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -190,9 +190,9 @@
         </div>
 
         <!-- Terms notice -->
-        <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/40 rounded-xl px-4 py-3">
-            <p class="text-xs text-emerald-700 dark:text-emerald-300 leading-relaxed">
-                <svg class="w-4 h-4 inline-block mr-1 -mt-0.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800/40 rounded-xl px-4 py-3">
+            <p class="text-xs text-yellow-700 dark:text-yellow-300 leading-relaxed">
+                <svg class="w-4 h-4 inline-block mr-1 -mt-0.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                 </svg>
                 Dengan mendaftar, Anda menyetujui penggunaan data untuk keperluan manajemen masjid sesuai kebijakan privasi kami.
@@ -202,7 +202,7 @@
         <!-- Submit Button -->
         <button
             type="submit"
-            class="btn-primary w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-sm tracking-wide"
+            class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-sm tracking-wide transition-all"
         >
             <span class="flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,7 +223,7 @@
         <div class="text-center">
             <p class="text-sm text-gray-500 dark:text-gray-400">
                 Sudah punya akun?
-                <a href="{{ route('login') }}" class="font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 ml-1">
+                <a href="{{ route('login') }}" class="font-bold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors duration-200 ml-1">
                     Masuk di sini →
                 </a>
             </p>

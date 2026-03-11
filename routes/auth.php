@@ -9,18 +9,34 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
+    // Combined Auth Page (Login/Register with slide animation)
+    // Use query param ?tab=register to show register form directly
+    Route::get('auth', [AuthController::class, 'showAuthPage'])
+        ->name('auth');
+    
+    Route::get('login', [AuthController::class, 'showAuthPage'])
+        ->name('login');
+    
+    Route::post('auth/login', [AuthController::class, 'login'])
+        ->name('auth.login');
+    
+    Route::post('auth/register', [AuthController::class, 'register'])
+        ->name('auth.register');
+
+    // Keep standard routes for backward compatibility
+    // Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    //     ->name('login');
+
+    Route::post('login', [AuthController::class, 'login']);
+
+    Route::get('register', [AuthController::class, 'showAuthPage'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
-
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('register', [AuthController::class, 'register']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
