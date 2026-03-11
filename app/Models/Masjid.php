@@ -7,13 +7,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Masjid extends Model
 {
+    protected $table = 'masjids';
+
     protected $fillable = [
-        'name',
-        'address',
-        'phone',
+        'nama',
+        'alamat',
+        'telepon',
         'email',
-        'description',
-        'is_active',
+        'kota',
+        'provinsi',
+        'kodepos',
+        'deskripsi',
+        'logo',
+        'website',
     ];
 
     protected $casts = [

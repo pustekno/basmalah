@@ -14,28 +14,25 @@ class MasjidSeeder extends Seeder
     {
         $masjids = [
             [
-                'name' => 'Masjid Al-Ikhlas',
-                'address' => 'Jl. Raya Bogor No. 123, Jakarta Timur',
-                'phone' => '021-12345678',
+                'nama' => 'Masjid Al-Ikhlas',
+                'alamat' => 'Jl. Raya Bogor No. 123, Jakarta Timur',
+                'telepon' => '021-12345678',
                 'email' => 'info@masjid-alikhlas.com',
-                'description' => 'Masjid Al-Ikhlas adalah masjid yang terletak di Jakarta Timur',
-                'is_active' => true,
+                'deskripsi' => 'Masjid Al-Ikhlas adalah masjid yang terletak di Jakarta Timur',
             ],
             [
-                'name' => 'Masjid An-Nur',
-                'address' => 'Jl. Sudirman No. 456, Jakarta Pusat',
-                'phone' => '021-87654321',
+                'nama' => 'Masjid An-Nur',
+                'alamat' => 'Jl. Sudirman No. 456, Jakarta Pusat',
+                'telepon' => '021-87654321',
                 'email' => 'info@masjid-annur.com',
-                'description' => 'Masjid An-Nur adalah masjid yang terletak di Jakarta Pusat',
-                'is_active' => true,
+                'deskripsi' => 'Masjid An-Nur adalah masjid yang terletak di Jakarta Pusat',
             ],
             [
-                'name' => 'Masjid At-Taqwa',
-                'address' => 'Jl. Gatot Subroto No. 789, Jakarta Selatan',
-                'phone' => '021-11223344',
+                'nama' => 'Masjid At-Taqwa',
+                'alamat' => 'Jl. Gatot Subroto No. 789, Jakarta Selatan',
+                'telepon' => '021-11223344',
                 'email' => 'info@masjid-attaqwa.com',
-                'description' => 'Masjid At-Taqwa adalah masjid yang terletak di Jakarta Selatan',
-                'is_active' => true,
+                'deskripsi' => 'Masjid At-Taqwa adalah masjid yang terletak di Jakarta Selatan',
             ],
         ];
 
