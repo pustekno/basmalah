@@ -55,13 +55,23 @@ class CategoryController extends Controller
         
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:income,expense',
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:7',
+            'icon_name' => 'required|string|max:255',
             'order' => 'nullable|integer',
         ]);
+
+        // Determine type from parent category
+        if ($validated['parent_id']) {
+            $parent = Category::find($validated['parent_id']);
+            $validated['type'] = $parent->type;
+        } else {
+            // If no parent, default to expense (or you can add validation to require parent)
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Please select a parent category to determine the type.');
+        }
 
         // Add masjid_id
         $validated['masjid_id'] = $this->getMasjidId();
@@ -129,14 +139,22 @@ class CategoryController extends Controller
         
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:income,expense',
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:7',
+            'icon_name' => 'required|string|max:255',
             'order' => 'nullable|integer',
             'is_active' => 'boolean',
         ]);
+
+        // Determine type from parent category OR keep existing type if no parent
+        if ($validated['parent_id']) {
+            $parent = Category::find($validated['parent_id']);
+            $validated['type'] = $parent->type;
+        } else {
+            // Keep existing type if no parent selected (for top-level categories)
+            $validated['type'] = $category->type;
+        }
 
         $category->update($validated);
 

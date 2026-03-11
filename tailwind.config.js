@@ -13,7 +13,22 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                display: ['Sora', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                primary: {
+                    DEFAULT: '#B8860B',
+                    light: '#DAA520',
+                    lightest: '#FEF3C7',
+                    dark: '#8B6508',
+                    darker: '#654C0F',
+                },
+                dark: {
+                    DEFAULT: '#1a1a1a',
+                    light: '#333333',
+                    lighter: '#4a4a4a',
+                }
+            }
         },
     },
 

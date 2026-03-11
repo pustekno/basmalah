@@ -19,7 +19,7 @@ class Category extends Model
         'parent_id',
         'description',
         'icon',
-        'color',
+        'icon_name',
         'is_active',
         'order',
         'masjid_id',

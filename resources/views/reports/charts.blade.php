@@ -1,171 +1,239 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Visualisasi Data & Chart') }}
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Visualisasi Data & Chart
             </h2>
-            <a href="{{ route('reports.index') }}" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded">
+            <a href="{{ route('reports.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium text-sm transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
                 Kembali
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Goals by Status -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-4">Target Berdasarkan Status</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        @php
-                            $totalGoals = $goalsData->sum('count');
-                            $statusColors = [
-                                'active' => ['bg' => 'bg-green-500', 'text' => 'text-green-600', 'label' => 'Aktif'],
-                                'completed' => ['bg' => 'bg-blue-500', 'text' => 'text-blue-600', 'label' => 'Selesai'],
-                                'cancelled' => ['bg' => 'bg-gray-500', 'text' => 'text-gray-600', 'label' => 'Dibatalkan'],
-                            ];
-                        @endphp
-                        @foreach($goalsData as $data)
-                            @php
-                                $percentage = $totalGoals > 0 ? ($data->count / $totalGoals * 100) : 0;
-                                $color = $statusColors[$data->status] ?? ['bg' => 'bg-gray-500', 'text' => 'text-gray-600', 'label' => ucfirst($data->status)];
-                            @endphp
-                            <div class="text-center">
-                                <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-                                    <svg class="transform -rotate-90 w-32 h-32">
-                                        <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="12" fill="transparent" class="text-gray-200"/>
-                                        <circle cx="64" cy="64" r="56" stroke="currentColor" stroke-width="12" fill="transparent" 
-                                            class="{{ str_replace('bg-', 'text-', $color['bg']) }}"
-                                            stroke-dasharray="{{ 2 * 3.14159 * 56 }}"
-                                            stroke-dashoffset="{{ 2 * 3.14159 * 56 * (1 - $percentage / 100) }}"
-                                            stroke-linecap="round"/>
-                                    </svg>
-                                    <div class="absolute">
-                                        <div class="text-2xl font-bold {{ $color['text'] }}">{{ $data->count }}</div>
-                                    </div>
-                                </div>
-                                <p class="font-semibold">{{ $color['label'] }}</p>
-                                <p class="text-sm text-gray-600">{{ number_format($percentage, 1) }}%</p>
-                            </div>
-                        @endforeach
+            
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Goals by Status - Doughnut Chart -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Target Berdasarkan Status</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="relative h-64">
+                            <canvas id="goalsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income vs Expense - Pie Chart -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Pemasukan vs Pengeluaran</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="relative h-64">
+                            <canvas id="incomeExpenseChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Dana Terkumpul per Kategori -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <!-- Bar Chart - Monthly Trend -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Tren Bulanan</h3>
+                </div>
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-4">Dana Terkumpul per Kategori</h3>
+                    <div class="relative h-80">
+                        <canvas id="monthlyTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Dana Terkumpul per Kategori</h3>
+                </div>
+                <div class="p-6">
                     @if($categoryData->count() > 0)
-                        @php
-                            $maxAmount = $categoryData->max('total');
-                            $colors = ['blue', 'green', 'purple', 'orange', 'teal', 'pink', 'indigo'];
-                        @endphp
                         <div class="space-y-4">
-                            @foreach($categoryData as $index => $data)
+                            @php
+                                $totalAmount = $categoryData->sum('total');
+                            @endphp
+                            @foreach($categoryData as $data)
                                 @php
                                     $color = $colors[$index % count($colors)];
                                     $percentage = $maxAmount > 0 ? ($data->total / $maxAmount * 100) : 0;
                                 @endphp
                                 <div>
-                                    <div class="flex justify-between mb-2">
-                                        <span class="font-medium">{{ $data->category }}</span>
-                                        <span class="text-{{ $color }}-600 font-bold">Rp {{ number_format($data->total, 0, ',', '.') }}</span>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ $data->category }}</span>
+                                        <span class="text-gray-500 dark:text-gray-400">Rp {{ number_format($data->total / 100, 0, ',', '.') }} ({{ number_format($percentage, 1) }}%)</span>
                                     </div>
-                                    <div class="relative h-8 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="absolute h-full bg-gradient-to-r from-{{ $color }}-400 to-{{ $color }}-600 rounded-full transition-all duration-500"
-                                            style="width: {{ $percentage }}%">
-                                        </div>
-                                        <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">
-                                            {{ number_format($percentage, 1) }}%
-                                        </div>
+                                    <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3">
+                                        <div class="bg-yellow-500 h-3 rounded-full" style="width: {{ $percentage }}%"></div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <p class="text-gray-500 text-center py-8">Tidak ada data kategori</p>
+                        <div class="text-center py-8">
+                            <p class="text-gray-500 dark:text-gray-400">No category data available</p>
+                        </div>
                     @endif
                 </div>
             </div>
 
-            <!-- Monthly Trends -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Goals Created per Month -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Target Dibuat per Bulan (12 Bulan)</h3>
-                        @if($monthlyGoals->count() > 0)
-                            @php
-                                $maxGoals = $monthlyGoals->max('count');
-                            @endphp
-                            <div class="flex items-end justify-between h-64 gap-2">
-                                @foreach($monthlyGoals as $data)
-                                    @php
-                                        $height = $maxGoals > 0 ? ($data->count / $maxGoals * 100) : 0;
-                                    @endphp
-                                    <div class="flex-1 flex flex-col items-center">
-                                        <div class="text-xs font-semibold text-blue-600 mb-1">{{ $data->count }}</div>
-                                        <div class="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t transition-all duration-500 hover:from-blue-600 hover:to-blue-400"
-                                            style="height: {{ $height }}%">
-                                        </div>
-                                        <div class="text-xs text-gray-600 mt-2 transform -rotate-45 origin-top-left">
-                                            {{ \Carbon\Carbon::parse($data->month . '-01')->format('M') }}
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-gray-500 text-center py-8">Tidak ada data</p>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Deposits per Month -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Total Deposit per Bulan (12 Bulan)</h3>
-                        @if($monthlyDeposits->count() > 0)
-                            @php
-                                $maxDeposits = $monthlyDeposits->max('total');
-                            @endphp
-                            <div class="flex items-end justify-between h-64 gap-2">
-                                @foreach($monthlyDeposits as $data)
-                                    @php
-                                        $height = $maxDeposits > 0 ? ($data->total / $maxDeposits * 100) : 0;
-                                    @endphp
-                                    <div class="flex-1 flex flex-col items-center">
-                                        <div class="text-xs font-semibold text-green-600 mb-1">
-                                            {{ number_format($data->total / 1000000, 1) }}M
-                                        </div>
-                                        <div class="w-full bg-gradient-to-t from-green-500 to-green-300 rounded-t transition-all duration-500 hover:from-green-600 hover:to-green-400"
-                                            style="height: {{ $height }}%">
-                                        </div>
-                                        <div class="text-xs text-gray-600 mt-2 transform -rotate-45 origin-top-left">
-                                            {{ \Carbon\Carbon::parse($data->month . '-01')->format('M') }}
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-gray-500 text-center py-8">Tidak ada data</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Info Note -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div class="flex">
-                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <div class="text-sm text-blue-800">
-                        <p class="font-semibold">Visualisasi Data</p>
-                        <p>Chart dan grafik ini menggunakan CSS untuk visualisasi. Untuk chart yang lebih interaktif, dapat diintegrasikan dengan Chart.js atau library lainnya.</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Goals Chart - Doughnut
+            const goalsCtx = document.getElementById('goalsChart').getContext('2d');
+            const goalsData = @json($goalsData);
+            const totalGoals = goalsData.reduce((sum, item) => sum + item.count, 0);
+            
+            new Chart(goalsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: goalsData.map(item => item.status.charAt(0).toUpperCase() + item.status.slice(1)),
+                    datasets: [{
+                        data: goalsData.map(item => item.count),
+                        backgroundColor: [
+                            '#f59e0b', // yellow for active
+                            '#6b7280', // gray for completed
+                            '#9ca3af'  // lighter gray for cancelled
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            // Income vs Expense - Pie
+            const ieCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const totalIncome = {{ $totalIncome ?? 0 }};
+            const totalExpense = {{ $totalExpense ?? 0 }};
+            
+            new Chart(ieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Pemasukan', 'Pengeluaran'],
+                    datasets: [{
+                        data: [totalIncome / 100, totalExpense / 100],
+                        backgroundColor: [
+                            '#f59e0b', // yellow
+                            '#6b7280'  // gray
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': Rp ' + context.raw.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Monthly Trend - Bar
+            const trendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+            const monthlyTrend = @json($monthlyTrend ?? []);
+            
+            new Chart(trendCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyTrend.map(item => item.month),
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: monthlyTrend.map(item => item.income / 100),
+                            backgroundColor: '#f59e0b',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: monthlyTrend.map(item => item.expense / 100),
+                            backgroundColor: '#6b7280',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': Rp ' + context.raw.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </x-app-layout>
