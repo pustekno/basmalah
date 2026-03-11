@@ -12,6 +12,7 @@ class Deposit extends Model
 {
     protected $fillable = [
         'goal_id',
+        'account_id',
         'donor_name',
         'amount',
         'notes',
@@ -39,5 +40,10 @@ class Deposit extends Model
     public function recorder(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
     }
 }

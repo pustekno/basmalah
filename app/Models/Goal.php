@@ -16,6 +16,7 @@ class Goal extends Model
         'description',
         'target_amount',
         'current_amount',
+        'progress_percentage',
         'start_date',
         'end_date',
         'status',
@@ -27,6 +28,7 @@ class Goal extends Model
     protected $casts = [
         'target_amount' => 'decimal:2',
         'current_amount' => 'decimal:2',
+        'progress_percentage' => 'decimal:2',
         'start_date' => 'date',
         'end_date' => 'date',
     ];
@@ -44,12 +46,6 @@ class Goal extends Model
     public function deposits(): HasMany
     {
         return $this->hasMany(Deposit::class);
-    }
-
-    public function getProgressPercentageAttribute(): float
-    {
-        if ($this->target_amount == 0) return 0;
-        return min(($this->current_amount / $this->target_amount) * 100, 100);
     }
 
     public function getRemainingAmountAttribute(): float

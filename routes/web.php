@@ -100,8 +100,10 @@ Route::middleware('auth')->group(function () {
         Route::post('goals', [GoalController::class, 'store'])->name('goals.store');
         Route::get('goals/{goal}/edit', [GoalController::class, 'edit'])->name('goals.edit');
         Route::patch('goals/{goal}', [GoalController::class, 'update'])->name('goals.update');
+        Route::patch('goals/{goal}/progress', [GoalController::class, 'updateProgress'])->name('goals.updateProgress');
         Route::delete('goals/{goal}', [GoalController::class, 'destroy'])->name('goals.destroy');
-        Route::post('goals/{goal}/deposits', [DepositController::class, 'store'])->name('goals.deposits.store');
+        Route::post('goals/{goal}/deposits', [DepositController::class, 'store'])->name('deposits.store');
+        Route::delete('deposits/{deposit}', [DepositController::class, 'destroy'])->name('deposits.destroy');
     });
     Route::middleware('permission:view goals')->group(function () {
         Route::get('goals', [GoalController::class, 'index'])->name('goals.index');
@@ -117,6 +119,9 @@ Route::middleware('auth')->group(function () {
     // Reports - Protected by permissions
     Route::middleware('permission:view reports')->group(function () {
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/income-vs-expense', [ReportController::class, 'incomeVsExpense'])->name('reports.income-vs-expense');
+        Route::get('reports/by-category', [ReportController::class, 'byCategory'])->name('reports.by-category');
+        Route::get('reports/by-account', [ReportController::class, 'byAccount'])->name('reports.by-account');
         Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
     });
 });

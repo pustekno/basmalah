@@ -18,6 +18,7 @@ class DepositController extends Controller
     public function store(Request $request, Goal $goal)
     {
         $validated = $request->validate([
+            'account_id' => 'required|exists:accounts,id',
             'donor_name' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
@@ -29,20 +30,29 @@ class DepositController extends Controller
         $validated['recorded_by'] = Auth::id();
         $validated['masjid_id'] = $this->getMasjidId();
 
-        DB::transaction(function () use ($validated, $goal) {
+        // Check if account has sufficient balance
+        $account = \App\Models\Account::findOrFail($validated['account_id']);
+        if ($account->balance < $validated['amount']) {
+            return back()->withErrors(['amount' => 'Saldo akun tidak mencukupi!'])->withInput();
+        }
+
+        DB::transaction(function () use ($validated, $goal, $account) {
             $deposit = Deposit::create($validated);
             
-            // Update goal current_amount
+            // Update goal current_amount (for deposit tracking only)
             $goal->increment('current_amount', $deposit->amount);
             
-            // Auto-complete goal if target reached
+            // Deduct from account balance
+            $account->decrement('balance', $deposit->amount);
+            
+            // Auto-complete goal if deposit target reached (but work progress may still be different)
             if ($goal->current_amount >= $goal->target_amount && $goal->status === 'active') {
                 $goal->update(['status' => 'completed']);
             }
         });
 
-        return redirect()->route('goals.show', $goal)
-            ->with('success', 'Deposit berhasil dicatat!');
+        return redirect()->route('goals.edit', $goal)
+            ->with('success', 'Deposit berhasil dicatat dan saldo akun telah dikurangi!');
     }
 
     /**
@@ -62,16 +72,22 @@ class DepositController extends Controller
     public function destroy(Deposit $deposit)
     {
         $goal = $deposit->goal;
+        $account = $deposit->account;
         
-        DB::transaction(function () use ($deposit, $goal) {
-            // Adjust goal amount
+        DB::transaction(function () use ($deposit, $goal, $account) {
+            // Adjust goal current_amount (for deposit tracking only)
             $goal->decrement('current_amount', $deposit->amount);
+            
+            // Return balance to account if account exists
+            if ($account) {
+                $account->increment('balance', $deposit->amount);
+            }
             
             // Delete deposit
             $deposit->delete();
         });
 
-        return redirect()->route('goals.show', $goal)
-            ->with('success', 'Deposit berhasil dihapus!');
+        return redirect()->route('goals.edit', $goal)
+            ->with('success', 'Deposit berhasil dihapus dan saldo dikembalikan!');
     }
 }
