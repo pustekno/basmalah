@@ -26,7 +26,7 @@
                 <div class="p-8">
                     <form action="<?php echo e(route('budgets.update', $budget)); ?>" method="POST" class="space-y-6">
                         <?php echo csrf_field(); ?>
-                        <?php echo method_field('PUT'); ?>
+                        <?php echo method_field('PATCH'); ?>
 
                         <!-- Category -->
                         <div>
