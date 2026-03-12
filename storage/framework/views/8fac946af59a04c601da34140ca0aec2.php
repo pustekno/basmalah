@@ -2,6 +2,46 @@
 <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out" 
     :class="{ '-translate-x-full': !sidebarOpen }">
     <div class="flex flex-col h-full">
+        <!-- Impersonation Banner -->
+        <?php if(session('is_impersonating')): ?>
+        <div class="bg-blue-600 dark:bg-blue-700 px-4 py-3">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <div class="text-white">
+                        <div class="text-xs font-medium">Viewing as:</div>
+                        <div class="text-sm font-bold"><?php echo e(session('impersonating_user_name')); ?></div>
+                    </div>
+                </div>
+                <form method="POST" action="<?php echo e(route('admin.users.back-to-admin')); ?>">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="px-3 py-1.5 bg-white text-blue-600 text-xs font-semibold rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                        </svg>
+                        Back
+                    </button>
+                </form>
+            </div>
+            <?php if(session('impersonating_roles')): ?>
+            <div class="flex flex-wrap gap-1">
+                <?php $__currentLoopData = session('impersonating_roles'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <span class="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full">
+                    <?php echo e($role); ?>
+
+                </span>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+            <?php endif; ?>
+            <div class="mt-1 text-xs text-blue-200">
+                Your Super Admin role is preserved
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Logo & Brand with Hide Button -->
         <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-slate-700">
             <div class="flex items-center gap-3">
