@@ -10,16 +10,12 @@ class Masjid extends Model
     protected $table = 'masjids';
 
     protected $fillable = [
-        'nama',
-        'alamat',
-        'telepon',
+        'name',
+        'address',
+        'phone',
         'email',
-        'kota',
-        'provinsi',
-        'kodepos',
-        'deskripsi',
-        'logo',
-        'website',
+        'description',
+        'is_active',
     ];
 
     protected $casts = [

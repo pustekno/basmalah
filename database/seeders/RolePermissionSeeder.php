@@ -99,9 +99,9 @@ class RolePermissionSeeder extends Seeder
     private function createTestUsers(): void
     {
         // Get masjids
-        $masjid1 = \App\Models\Masjid::where('nama', 'Masjid Al-Ikhlas')->first();
-        $masjid2 = \App\Models\Masjid::where('nama', 'Masjid An-Nur')->first();
-        $masjid3 = \App\Models\Masjid::where('nama', 'Masjid At-Taqwa')->first();
+        $masjid1 = \App\Models\Masjid::where('name', 'Masjid Al-Ikhlas')->first();
+        $masjid2 = \App\Models\Masjid::where('name', 'Masjid An-Nur')->first();
+        $masjid3 = \App\Models\Masjid::where('name', 'Masjid At-Taqwa')->first();
 
         // Super Admin User (no masjid - can see all)
         $superAdmin = User::firstOrCreate(
