@@ -9,57 +9,54 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
      <?php $__env->slot('header', null, []); ?> 
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <?php echo e(__('Categories')); ?>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <?php echo e(__('categories.list')); ?>
 
-            </h2>
-            <a href="<?php echo e(route('categories.create')); ?>" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-xl font-semibold text-sm text-white hover:bg-emerald-700 transition-colors shadow-lg">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Create Category
-            </a>
-        </div>
+        </h2>
+        <a href="<?php echo e(route('categories.create')); ?>" class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New Category
+        </a>
      <?php $__env->endSlot(); ?>
 
-    <div class="py-12">
+    <div class="py-6" x-data="{ deleteModal: false, deleteCategory: null }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             <?php if(session('success')): ?>
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl">
+                <div class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-xl">
                     <?php echo e(session('success')); ?>
 
                 </div>
             <?php endif; ?>
 
             <?php if(session('error')): ?>
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
                     <?php echo e(session('error')); ?>
 
                 </div>
             <?php endif; ?>
 
             <!-- Income Categories -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                         </svg>
                         Income Categories
                     </h3>
                 </div>
-                <div class="p-6">
+                <div class="p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <?php $__empty_1 = true; $__currentLoopData = $incomeCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                            <div class="border border-gray-100 dark:border-slate-700 rounded-xl p-4 hover:shadow-md transition duration-200 bg-gray-50 dark:bg-slate-700/30">
                                 <div class="flex items-start justify-between mb-3">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: <?php echo e($category->color); ?>20">
-                                            <svg class="w-5 h-5" style="color: <?php echo e($category->color); ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                                            </svg>
+                                            <?php echo \App\Helpers\IconHelper::renderIcon($category->icon_name ?? 'tag', 'w-5 h-5', $category->color); ?>
+
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900 dark:text-white"><?php echo e($category->name); ?></h4>
@@ -71,22 +68,20 @@
                                 </div>
 
                                 <?php if($category->children->count() > 0): ?>
-                                    <div class="mb-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
+                                    <div class="mb-3 pl-4 border-l-2 border-gray-200 dark:border-slate-600">
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Sub-categories:</p>
                                         <?php $__currentLoopData = $category->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">• <?php echo e($child->name); ?></div>
+                                            <div class="text-sm text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
+                                                • <?php echo e($child->name); ?>
+
+                                            </div>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
                                 <?php endif; ?>
 
-                                <div class="flex gap-2 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                    <a href="<?php echo e(route('categories.show', $category)); ?>" class="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700">View</a>
-                                    <a href="<?php echo e(route('categories.edit', $category)); ?>" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700">Edit</a>
-                                    <form action="<?php echo e(route('categories.destroy', $category)); ?>" method="POST" class="inline">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button type="submit" class="text-sm text-red-600 dark:text-red-400 hover:text-red-700" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
+                                <div class="flex gap-3 mt-3 pt-3 border-t border-gray-200 dark:border-slate-600">
+                                    <a href="<?php echo e(route('categories.edit', $category)); ?>" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium">Edit</a>
+                                    <button @click="deleteModal = true; deleteCategory = '<?php echo e($category->id); ?>'" class="text-sm text-gray-500 hover:text-red-600 font-medium">Delete</button>
                                 </div>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -99,25 +94,24 @@
             </div>
 
             <!-- Expense Categories -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                         </svg>
                         Expense Categories
                     </h3>
                 </div>
-                <div class="p-6">
+                <div class="p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <?php $__empty_1 = true; $__currentLoopData = $expenseCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                            <div class="border border-gray-100 dark:border-slate-700 rounded-xl p-4 hover:shadow-md transition duration-200 bg-gray-50 dark:bg-slate-700/30">
                                 <div class="flex items-start justify-between mb-3">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: <?php echo e($category->color); ?>20">
-                                            <svg class="w-5 h-5" style="color: <?php echo e($category->color); ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                                            </svg>
+                                            <?php echo \App\Helpers\IconHelper::renderIcon($category->icon_name ?? 'tag', 'w-5 h-5', $category->color); ?>
+
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900 dark:text-white"><?php echo e($category->name); ?></h4>
@@ -129,7 +123,7 @@
                                 </div>
 
                                 <?php if($category->children->count() > 0): ?>
-                                    <div class="mb-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
+                                    <div class="mb-3 pl-4 border-l-2 border-gray-200 dark:border-slate-600">
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Sub-categories:</p>
                                         <?php $__currentLoopData = $category->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="text-sm text-gray-700 dark:text-gray-300 mb-1">• <?php echo e($child->name); ?></div>
@@ -137,14 +131,9 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <div class="flex gap-2 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                    <a href="<?php echo e(route('categories.show', $category)); ?>" class="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700">View</a>
-                                    <a href="<?php echo e(route('categories.edit', $category)); ?>" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700">Edit</a>
-                                    <form action="<?php echo e(route('categories.destroy', $category)); ?>" method="POST" class="inline">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button type="submit" class="text-sm text-red-600 dark:text-red-400 hover:text-red-700" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
+                                <div class="flex gap-3 mt-3 pt-3 border-t border-gray-200 dark:border-slate-600">
+                                    <a href="<?php echo e(route('categories.edit', $category)); ?>" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium">Edit</a>
+                                    <button @click="deleteModal = true; deleteCategory = '<?php echo e($category->id); ?>'" class="text-sm text-gray-500 hover:text-red-600 font-medium">Delete</button>
                                 </div>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -152,6 +141,39 @@
                                 No expense categories found.
                             </div>
                         <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div x-show="deleteModal" x-transition.opacity class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" @click="deleteModal = false"></div>
+                
+                <div class="inline-block align-bottom bg-white dark:bg-slate-800 rounded-2xl shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full">
+                    <div class="p-6 text-center">
+                        <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Delete Category</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                            Are you sure you want to delete this category? This action cannot be undone.
+                        </p>
+                        <div class="flex gap-3">
+                            <button @click="deleteModal = false" class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors">
+                                Cancel
+                            </button>
+                            <form :action="'<?php echo e(route('categories.index')); ?>/' + deleteCategory" method="POST" class="flex-1">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
+                                <button type="submit" class="w-full px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-colors">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

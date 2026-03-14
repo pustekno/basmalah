@@ -40,7 +40,10 @@ class MasjidSeeder extends Seeder
         ];
 
         foreach ($masjids as $masjid) {
-            \App\Models\Masjid::create($masjid);
+            \App\Models\Masjid::firstOrCreate(
+                ['name' => $masjid['name']], // Cek berdasarkan nama
+                $masjid // Data lengkap
+            );
         }
     }
 }
