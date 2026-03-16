@@ -18,6 +18,34 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            <!-- Login As User Alert -->
+            <?php if(session('original_user_id')): ?>
+            <div class="mb-6 bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-4 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-blue-900 dark:text-blue-100">You are currently logged in as <?php echo e(Auth::user()->name); ?></p>
+                            <p class="text-xs text-blue-700 dark:text-blue-300">Super Admin impersonation mode is active</p>
+                        </div>
+                    </div>
+                    <form action="<?php echo e(route('admin.users.back-to-admin')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all shadow-sm">
+                            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                            </svg>
+                            Back to Admin
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Welcome Section -->
             <div class="mb-8">
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo e(__('dashboard.welcome_back')); ?>, <?php echo e(Auth::user()->name); ?>!</h1>
@@ -124,7 +152,7 @@
                                     </div>
                                     <div class="text-right">
                                         <p class="font-semibold <?php echo e($transaction->type === 'income' ? 'text-yellow-600' : 'text-gray-700 dark:text-gray-200'); ?>">
-                                            <?php echo e($transaction->type === 'income' ? '+' : '-'); ?> Rp <?php echo e(number_format($transaction->amount, 0, ',', '.')); ?>
+                                            <?php echo e($transaction->type === 'income' ? '+' : '-'); ?> Rp <?php echo e(number_format($transaction->amount / 100, 0, ',', '.')); ?>
 
                                         </p>
                                     </div>

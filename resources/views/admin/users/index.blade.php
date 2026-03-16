@@ -43,7 +43,7 @@
                                 <option value="" style="color: #1f2937 !important;">All Masjids</option>
                                 @forelse($masjids as $masjid)
                                     <option value="{{ $masjid->id }}" style="color: #1f2937 !important;" {{ request('masjid_id') == $masjid->id ? 'selected' : '' }}>
-                                        {{ $masjid->nama }}
+                                        {{ $masjid->name }}
                                     </option>
                                 @empty
                                     <option value="" disabled style="color: #1f2937 !important;">No masjids available</option>
@@ -124,7 +124,7 @@
                                 <td class="px-6 py-4">
                                     @if($user->masjid)
                                         <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium">
-                                            {{ $user->masjid->nama }}
+                                            {{ $user->masjid->name }}
                                         </span>
                                     @else
                                         <span class="text-gray-400 text-sm">-</span>
