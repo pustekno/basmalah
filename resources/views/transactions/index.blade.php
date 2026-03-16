@@ -158,4 +158,21 @@
 
         </div>
     </div>
+    
+    <!-- Notification Trigger -->
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                notifySuccess('Transaksi Baru', '{{ session('success') }}');
+            });
+        </script>
+    @endif
+    
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                notifyError('Error', '{{ session('error') }}');
+            });
+        </script>
+    @endif
 </x-app-layout>

@@ -718,5 +718,70 @@
             align-items: center;
             justify-content: center;
         }
+        
+        /* Dark mode styles for FullCalendar */
+        .dark .calendar-ultra .fc-toolbar-title {
+            color: #f3f4f6 !important;
+        }
+        
+        .dark .calendar-ultra .fc-button {
+            background-color: #374151 !important;
+            border-color: #4b5563 !important;
+            color: #f3f4f6 !important;
+        }
+        
+        .dark .calendar-ultra .fc-button:hover {
+            background-color: #4b5563 !important;
+        }
+        
+        .dark .calendar-ultra .fc-button-primary:not(:disabled).fc-button-active,
+        .dark .calendar-ultra .fc-button-primary:not(:disabled):active {
+            background-color: #D4A017 !important;
+            border-color: #D4A017 !important;
+            color: white !important;
+        }
+        
+        .dark .calendar-ultra .fc-daygrid-day:hover {
+            background-color: #374151 !important;
+        }
+        
+        .dark .calendar-ultra .fc-daygrid-day-number {
+            color: #e5e7eb !important;
+        }
+        
+        .dark .calendar-ultra .fc-col-header-cell-cushion {
+            color: #9ca3af !important;
+        }
+        
+        .dark .calendar-ultra .fc-day-today {
+            background-color: #451a03 !important;
+        }
+        
+        .dark .calendar-ultra .fc-scrollgrid {
+            border-color: #374151 !important;
+        }
+        
+        .dark .calendar-ultra .fc-col-header-cell {
+            background-color: #1f2937 !important;
+            border-color: #374151 !important;
+        }
+        
+        .dark .calendar-ultra .fc-daygrid-day {
+            background-color: #1f2937 !important;
+            border-color: #374151 !important;
+        }
+        
+        .dark .calendar-ultra .fc-day-other .fc-daygrid-day-number {
+            color: #6b7280 !important;
+        }
+        
+        .dark .calendar-ultra .fc-highlight {
+            background-color: #374151 !important;
+        }
+        
+        .dark .calendar-ultra .fc-timegrid-slot {
+            background-color: #1f2937 !important;
+            border-color: #374151 !important;
+        }
     </style>
 </x-app-layout>

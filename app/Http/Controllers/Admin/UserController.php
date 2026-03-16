@@ -27,7 +27,10 @@ class UserController extends Controller
         }
         
         $users = $query->paginate(5);
-        $masjids = Masjid::all();
+        
+        // Get all masjids (no scope filtering)
+        $masjids = Masjid::where('is_active', true)->get();
+        
         $roles = Role::all();
         
         return view('admin.users.index', compact('users', 'masjids', 'roles'));

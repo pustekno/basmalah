@@ -179,6 +179,23 @@
             </div>
         </div>
     </div>
+    
+    <!-- Notification Trigger -->
+    <?php if(session('success')): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                notifySuccess('Kategori Updated', '<?php echo e(session('success')); ?>');
+            });
+        </script>
+    <?php endif; ?>
+    
+    <?php if(session('error')): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                notifyError('Error', '<?php echo e(session('error')); ?>');
+            });
+        </script>
+    <?php endif; ?>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>

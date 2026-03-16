@@ -12,6 +12,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\PublicReportController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Public Report Routes (No Auth Required)
+Route::get('/laporan', [PublicReportController::class, 'index'])->name('public.reports.index');
+Route::get('/laporan/cari', [PublicReportController::class, 'search'])->name('public.reports.search');
+Route::get('/laporan/{masjid}', [PublicReportController::class, 'show'])->name('public.reports.show');
 
 // Impersonation Routes (Super Admin only - protected in controller)
 Route::middleware(['auth', 'role:Super Admin'])->group(function () {

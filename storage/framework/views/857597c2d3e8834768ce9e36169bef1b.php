@@ -53,7 +53,7 @@
                                 <option value="" style="color: #1f2937 !important;">All Masjids</option>
                                 <?php $__empty_1 = true; $__currentLoopData = $masjids; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $masjid): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <option value="<?php echo e($masjid->id); ?>" style="color: #1f2937 !important;" <?php echo e(request('masjid_id') == $masjid->id ? 'selected' : ''); ?>>
-                                        <?php echo e($masjid->nama); ?>
+                                        <?php echo e($masjid->name); ?>
 
                                     </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -137,7 +137,7 @@
                                 <td class="px-6 py-4">
                                     <?php if($user->masjid): ?>
                                         <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium">
-                                            <?php echo e($user->masjid->nama); ?>
+                                            <?php echo e($user->masjid->name); ?>
 
                                         </span>
                                     <?php else: ?>
