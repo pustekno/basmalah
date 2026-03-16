@@ -228,10 +228,10 @@
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-all">
                     <div class="w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center text-white font-semibold">
-                        {{ substr(Auth::user()->name, 0, 1) }}
+                        {{ substr(session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name, 0, 1) }}
                     </div>
                     <div class="flex-1 text-left">
-                        <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ Auth::user()->name }}</div>
+                        <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name }}</div>
                         <div class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
                     </div>
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

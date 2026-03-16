@@ -164,14 +164,9 @@ class UserController extends Controller
         // Reload user with fresh roles and permissions
         auth()->user()->load('roles', 'permissions');
 
-        // Redirect to the user's Masjid dashboard if they have one
-        if ($user->masjid_id) {
-            return redirect()->route('dashboard', ['masjid_id' => $user->masjid_id])
-                ->with('success', 'You are now viewing ' . $user->name . "'s Masjid panel with their permissions. Your Super Admin session is preserved.");
-        }
-
+        // Redirect to dashboard without query parameters
         return redirect()->route('dashboard')
-            ->with('success', 'You are now viewing ' . $user->name . "'s account with their permissions. Your Super Admin session is preserved.");
+            ->with('success', 'You are now viewing ' . $user->name . "'s account. Your Super Admin session is preserved.");
     }
 
     /**

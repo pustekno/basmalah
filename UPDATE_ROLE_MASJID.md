@@ -9,19 +9,24 @@ git pull origin main
 # 2. Install package baru (spatie/laravel-permission)
 composer install
 
-# 3. Jalankan migrasi baru (untuk tabel masjid & permissions)
-php artisan migrate
-
-# 4. Refresh autoload (penting!)
+# 3. Refresh autoload
 composer dump-autoload
 
-# 5. Jalankan seeder (otomatis jalankan semua seeder yang diperlukan)
-php artisan db:seed
+# 4. Jalankan migrasi baru (untuk tabel masjid & permissions)
+php artisan migrate:fresh --seed
 
-# 6. Clear cache
+# 5. Clear cache
 php artisan config:clear
 php artisan cache:clear
 ```
+
+---
+
+## ⚠️ PENTING: Urutan Migrasi
+
+Pastikan file migrasi `create_masjids_table` ada dengan timestamp `2026_03_03_065257` (SEBELUM migrasi add_masjid_id).
+
+Jika tidak ada, file ini sudah di-commit dan akan otomatis ter-pull.
 
 ---
 

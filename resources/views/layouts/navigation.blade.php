@@ -74,10 +74,10 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center gap-2 px-3 py-2 border border-gray-200 dark:border-slate-600 text-sm leading-4 font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 hover:bg-gray-50 dark:hover:bg-slate-600 hover:border-emerald-300 dark:hover:border-emerald-600 focus:outline-none transition ease-in-out duration-150">
                             <div class="w-7 h-7 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center text-white text-xs font-bold">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                {{ strtoupper(substr(session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name, 0, 1)) }}
                             </div>
                             <div class="text-left hidden md:block">
-                                <div class="font-semibold text-xs">{{ Auth::user()->name }}</div>
+                                <div class="font-semibold text-xs">{{ session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->getRoleNames()->first() ?? 'User' }}</div>
                             </div>
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -88,7 +88,7 @@
 
                     <x-slot name="content">
                         <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-600">
-                            <div class="font-semibold text-sm text-gray-900 dark:text-white">{{ Auth::user()->name }}</div>
+                            <div class="font-semibold text-sm text-gray-900 dark:text-white">{{ session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
                         </div>
                         
@@ -149,10 +149,10 @@
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-slate-600">
             <div class="px-4 flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    {{ strtoupper(substr(session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name, 0, 1)) }}
                 </div>
                 <div>
-                    <div class="font-semibold text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                    <div class="font-semibold text-base text-gray-800 dark:text-gray-200">{{ session('is_impersonating') ? session('impersonating_user_name') : Auth::user()->name }}</div>
                     <div class="font-medium text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
                 </div>
             </div>
