@@ -291,12 +291,24 @@
                 
                 <!-- Auth Buttons -->
                 <div class="hidden lg:flex items-center gap-3">
+                    @auth
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 border-2 border-amber text-amber font-semibold rounded-xl hover:bg-amber hover:text-white transition-all duration-300 btn-outline">
+                        Dashboard
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="px-5 py-2.5 bg-amber text-white font-semibold rounded-xl hover:bg-amber-dark transition-all duration-300 btn-primary shadow-amber">
+                            Keluar
+                        </button>
+                    </form>
+                    @else
                     <a href="{{ route('login') }}" class="px-5 py-2.5 border-2 border-amber text-amber font-semibold rounded-xl hover:bg-amber hover:text-white transition-all duration-300 btn-outline">
                         Masuk
                     </a>
                     <a href="{{ route('register') }}" class="px-5 py-2.5 bg-amber text-white font-semibold rounded-xl hover:bg-amber-dark transition-all duration-300 btn-primary shadow-amber">
                         Daftar Gratis
                     </a>
+                    @endauth
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -316,8 +328,16 @@
                 <a href="#harga" class="text-dark-lighter hover:text-amber font-medium py-2">Harga</a>
                 <a href="#laporan" class="text-dark-lighter hover:text-amber font-medium py-2">Lihat Laporan Masjid</a>
                 <div class="flex flex-col gap-3 pt-4 border-t border-amber-100">
+                    @auth
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 border-2 border-amber text-amber font-semibold rounded-xl text-center">Dashboard</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full px-5 py-2.5 bg-amber text-white font-semibold rounded-xl text-center">Keluar</button>
+                    </form>
+                    @else
                     <a href="{{ route('login') }}" class="px-5 py-2.5 border-2 border-amber text-amber font-semibold rounded-xl text-center">Masuk</a>
                     <a href="{{ route('register') }}" class="px-5 py-2.5 bg-amber text-white font-semibold rounded-xl text-center">Daftar Gratis</a>
+                    @endauth
                 </div>
             </div>
         </div>

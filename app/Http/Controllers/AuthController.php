@@ -43,6 +43,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Viewer diarahkan ke landing page "/"
+            if (Auth::user()->hasRole('Viewer')) {
+                return redirect('/');
+            }
+
             return redirect()->intended(route('dashboard'));
         }
 

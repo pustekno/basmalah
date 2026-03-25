@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Viewer role diarahkan ke halaman publik "/"
+        if (Auth::user()->hasRole('Viewer')) {
+            return redirect('/');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
